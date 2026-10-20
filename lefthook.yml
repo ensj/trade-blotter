@@ -4,7 +4,7 @@ pre-commit:
     biome:
       root: frontend/
       glob: "*.{ts,js,mjs,vue,json}"
-      run: npx biome check --write --no-errors-on-unmatched {staged_files}
+      run: npx --no biome check --write --no-errors-on-unmatched {staged_files}
       stage_fixed: true
     csharpier:
       glob: "backend/**/*.{cs,csproj}"
@@ -25,6 +25,6 @@ pre-push:
   commands:
     knip:
       root: frontend/
-      run: npx knip
+      run: npx --no knip
     jscpd:
       run: frontend/node_modules/.bin/jscpd
