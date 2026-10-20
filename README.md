@@ -11,6 +11,11 @@ Design: [`docs/superpowers/specs/2026-10-19-trade-blotter-design.md`](docs/super
 - .NET 8 SDK. `global.json` pins `8.0.x` with `rollForward: latestFeature`. If `dotnet` resolves to another SDK, put the right one first: `export DOTNET_ROOT=$HOME/.dotnet PATH=$HOME/.dotnet:$PATH`.
 - Node 24.
 
+### Claude Code MCP servers and skills
+
+- `.mcp.json` registers three project MCP servers, run through `npx`: AG Grid (`ag-mcp`), PrimeVue (`@primevue/mcp`) and Playwright (`@playwright/mcp`). Claude Code asks you to approve them on first use.
+- `.claude/skills/` holds the vendors' official skills, copied from [`ag-grid/skills`](https://github.com/ag-grid/skills) (`ag-dev`, `ag-update`) and [`primefaces/primeui-plugins`](https://github.com/primefaces/primeui-plugins/tree/main/plugins/primevue/skills) (`primevue-*`; these call the PrimeVue MCP tools). To update them, re-copy from those repos.
+
 ### Backend
 
 ```sh

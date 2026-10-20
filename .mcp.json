@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "ag-grid": {
+      "command": "npx",
+      "args": ["-y", "ag-mcp@^1"]
+    },
+    "primevue": {
+      "command": "npx",
+      "args": ["-y", "@primevue/mcp@^5"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@0.0.83"]
+    }
+  }
+}
