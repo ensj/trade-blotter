@@ -1,0 +1,31 @@
+# .NET
+bin/
+obj/
+TestResults/
+*.db
+*.db-shm
+*.db-wal
+
+# Node
+node_modules/
+dist/
+coverage/
+*.log
+
+# Stryker
+StrykerOutput/
+reports/
+.stryker-tmp/
+stryker-incremental.json
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
+# Editors / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.local
