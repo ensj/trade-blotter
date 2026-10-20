@@ -36,6 +36,16 @@ cd frontend && npm test     # Vitest; fails below 80% lines/branches/functions/s
 
 ### Mutation testing
 
+On demand only, never on a hook. Thresholds: high 80, low 60, break 50.
+
+```sh
+scripts/mutation-backend.sh               # Stryker.NET on backend Features/** (local tool, `dotnet tool restore`)
+scripts/mutation-backend.sh --since:main  # only mutants in files changed since main
+cd frontend && npm run mutation           # Stryker.js on src/**/*.ts (no components), incremental
+```
+
+Both use cores − 1 for concurrency. Reports land in `backend/StrykerOutput/` and `frontend/reports/mutation/` (gitignored).
+
 ### End-to-end tests
 
 ## Assumptions and design decisions
