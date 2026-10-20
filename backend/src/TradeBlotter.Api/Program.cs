@@ -1,10 +1,43 @@
+using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
+using TradeBlotter.Api.Features.Positions;
+using TradeBlotter.Api.Features.Trades;
+using TradeBlotter.Api.Http;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(o =>
+        o.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(allowIntegerValues: false)
+        )
+    );
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<NotImplementedExceptionHandler>();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o =>
+{
+    o.SupportNonNullableReferenceTypes();
+    // Swashbuckle maps decimal to "double"; money is decimal end to end.
+    o.MapType<decimal>(() => new OpenApiSchema { Type = "number", Format = "decimal" });
+    o.MapType<decimal?>(() =>
+        new OpenApiSchema
+        {
+            Type = "number",
+            Format = "decimal",
+            Nullable = true,
+        }
+    );
+});
+
+builder.Services.AddScoped<TradeService>();
+builder.Services.AddScoped<PositionService>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,0 +1,4 @@
+[
+  { "symbol": "AAPL", "netQuantity": 100, "averageCost": 187.25 },
+  { "symbol": "MSFT", "netQuantity": -25.5, "averageCost": 412.1 }
+]

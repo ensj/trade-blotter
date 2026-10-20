@@ -3,6 +3,14 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [vue()],
+  server: {
+    port: 5173,
+    strictPort: true,
+    proxy: {
+      '/trades': 'http://localhost:5080',
+      '/positions': 'http://localhost:5080',
+    },
+  },
   test: {
     environment: 'jsdom',
     include: ['src/**/*.test.ts'],

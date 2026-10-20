@@ -23,9 +23,15 @@ dotnet run --project src/TradeBlotter.Api   # http://localhost:5080, Swagger at 
 ```sh
 cd frontend
 npm install
-npm run dev     # http://localhost:5173
+npm run dev     # http://localhost:5173; proxies /trades and /positions to the backend on 5080
 npm run build
 ```
+
+### API contract
+
+- `docs/openapi.json`: the OpenAPI document exported from Swashbuckle. A backend test fails if it drifts from the running app; regenerate it with `UPDATE_OPENAPI=1 dotnet test backend`.
+- `docs/examples/`: request, response and validation-error payloads. A backend test deserializes them into the DTOs.
+- `frontend/src/api/types.ts`: TypeScript mirror of the contract.
 
 ### Tests
 

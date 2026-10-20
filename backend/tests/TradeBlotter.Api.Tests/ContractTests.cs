@@ -1,0 +1,139 @@
+using System.Net;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using TradeBlotter.Api.Features.Positions;
+using TradeBlotter.Api.Features.Trades;
+
+namespace TradeBlotter.Api.Tests;
+
+public class ContractTests(WebApplicationFactory<Program> factory)
+    : IClassFixture<WebApplicationFactory<Program>>
+{
+    private readonly HttpClient client = factory.CreateClient();
+
+    [Theory]
+    [InlineData("/trades")]
+    [InlineData("/positions")]
+    public async Task List_endpoints_return_an_empty_array(string path)
+    {
+        var response = await client.GetAsync(path);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("[]", await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task Get_unknown_trade_returns_404_problem_details()
+    {
+        var response = await client.GetAsync($"/trades/{Guid.NewGuid()}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Post_valid_trade_returns_501_problem_details_until_implemented()
+    {
+        var response = await client.PostAsync(
+            "/trades",
+            Json(Example("create-trade-request.json"))
+        );
+
+        Assert.Equal(HttpStatusCode.NotImplemented, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.Equal(501, problem?.Status);
+    }
+
+    [Theory]
+    [InlineData("""{ "side": "Buy", "quantity": 1, "price": 1 }""", "Symbol")]
+    [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "Side")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "price": 1 }""", "Quantity")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1 }""", "Price")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Hold", "quantity": 1, "price": 1 }""", "$.side")]
+    [InlineData("""{ "symbol": "AAPL", "side": 0, "quantity": 1, "price": 1 }""", "$.side")]
+    public async Task Post_invalid_trade_returns_validation_problem(string body, string errorKey)
+    {
+        var response = await client.PostAsync("/trades", Json(body));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        Assert.Contains(errorKey, problem!.Errors.Keys);
+    }
+
+    [Fact]
+    public async Task Post_malformed_json_returns_400()
+    {
+        var response = await client.PostAsync("/trades", Json("{ not json"));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_non_json_returns_415()
+    {
+        var response = await client.PostAsync(
+            "/trades",
+            new StringContent("symbol=AAPL", Encoding.UTF8, "text/plain")
+        );
+
+        Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
+    }
+
+    [Fact]
+    public void Side_serializes_as_a_string()
+    {
+        var trade = new TradeResponse(Guid.Empty, "AAPL", Side.Sell, 1m, 2m, DateTime.UnixEpoch);
+
+        Assert.Contains("\"side\":\"Sell\"", Serialize(trade));
+    }
+
+    [Fact]
+    public void Example_responses_match_the_dtos()
+    {
+        var trades = Deserialize<TradeResponse[]>(Example("trades.json"));
+        var positions = Deserialize<PositionResponse[]>(Example("positions.json"));
+
+        Assert.Equal(Side.Buy, trades[0].Side);
+        Assert.Equal(DateTimeKind.Utc, trades[0].Timestamp.Kind);
+        Assert.Equal(187.25m, positions[0].AverageCost);
+    }
+
+    // Set UPDATE_OPENAPI=1 to rewrite docs/openapi.json from the running app.
+    [Fact]
+    public async Task Committed_openapi_document_matches_the_app()
+    {
+        var live = await client.GetStringAsync("/swagger/v1/swagger.json");
+        var path = Path.Combine(RepoRoot(), "docs", "openapi.json");
+        if (Environment.GetEnvironmentVariable("UPDATE_OPENAPI") == "1")
+            await File.WriteAllTextAsync(path, live + "\n");
+
+        Assert.Equal(live + "\n", await File.ReadAllTextAsync(path));
+    }
+
+    private string Serialize<T>(T value) => JsonSerializer.Serialize(value, MvcJsonOptions());
+
+    private T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, MvcJsonOptions())!;
+
+    private JsonSerializerOptions MvcJsonOptions() =>
+        factory
+            .Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>>()
+            .Value.JsonSerializerOptions;
+
+    private static StringContent Json(string body) => new(body, Encoding.UTF8, "application/json");
+
+    private static string Example(string name) =>
+        File.ReadAllText(Path.Combine(RepoRoot(), "docs", "examples", name));
+
+    private static string RepoRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (!File.Exists(Path.Combine(dir.FullName, "global.json")))
+            dir = dir.Parent!;
+        return dir.FullName;
+    }
+}
