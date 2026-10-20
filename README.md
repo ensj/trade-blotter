@@ -34,6 +34,18 @@ cd backend && dotnet test   # xUnit; fails below 80% line coverage (coverlet; Pr
 cd frontend && npm test     # Vitest; fails below 80% lines/branches/functions/statements
 ```
 
+### Lint, format and hooks
+
+```sh
+cd frontend && npx biome check .                        # Biome: format + lint TS/JS/Vue/JSON
+dotnet tool restore && dotnet csharpier check backend   # CSharpier (local tool in .config/dotnet-tools.json)
+lefthook install                                        # once per clone (also run by `npm install` in frontend)
+```
+
+- **pre-commit** (lefthook): Biome and CSharpier fix staged files, the file-length check warns, then `dotnet test` runs if `backend/**` is staged and `npm test` if `frontend/**` is staged.
+- **Claude Code** (`.claude/settings.json`): after every Edit/Write/MultiEdit, `scripts/claude-post-edit.sh` formats and lints the file and runs the file-length check. Lint errors exit 2 so the agent sees them.
+- `scripts/with-dotnet.sh` puts `~/.dotnet` first on PATH for hooks, since git hooks don't read shell profiles.
+
 ### Mutation testing
 
 On demand only, never on a hook. Thresholds: high 80, low 60, break 50.

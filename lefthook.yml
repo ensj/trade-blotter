@@ -1,0 +1,21 @@
+pre-commit:
+  piped: true
+  commands:
+    biome:
+      root: frontend/
+      glob: "*.{ts,js,mjs,vue,json}"
+      run: npx biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+    csharpier:
+      glob: "backend/**/*.{cs,csproj}"
+      run: scripts/with-dotnet.sh dotnet csharpier format {staged_files}
+      stage_fixed: true
+    file-length:
+      run: scripts/check-file-length.sh {staged_files}
+    backend-tests:
+      glob: "backend/**"
+      run: scripts/with-dotnet.sh dotnet test backend
+    frontend-tests:
+      root: frontend/
+      glob: "**"
+      run: npm test
