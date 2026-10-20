@@ -1,10 +1,8 @@
 using System.Net;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace TradeBlotter.Api.Tests;
 
-public class SmokeTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+public class SmokeTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
     [Fact]
     public async Task Swagger_document_is_served()

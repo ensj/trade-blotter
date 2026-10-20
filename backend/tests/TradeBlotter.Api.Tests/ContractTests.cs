@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TradeBlotter.Api.Features.Positions;
@@ -11,8 +10,7 @@ using TradeBlotter.Api.Features.Trades;
 
 namespace TradeBlotter.Api.Tests;
 
-public class ContractTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+public class ContractTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
     private readonly HttpClient client = factory.CreateClient();
 

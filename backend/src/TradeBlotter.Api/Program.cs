@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Positions;
 using TradeBlotter.Api.Features.Trades;
 using TradeBlotter.Api.Http;
@@ -31,10 +33,18 @@ builder.Services.AddSwaggerGen(o =>
     );
 });
 
+builder.Services.AddDbContext<AppDbContext>(o =>
+    o.UseSqlite(builder.Configuration.GetConnectionString("TradeBlotter"))
+);
 builder.Services.AddScoped<TradeService>();
 builder.Services.AddScoped<PositionService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+}
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();

@@ -18,6 +18,13 @@ cd backend
 dotnet run --project src/TradeBlotter.Api   # http://localhost:5080, Swagger at /swagger
 ```
 
+SQLite via EF Core 8. Migrations in `src/TradeBlotter.Api/Data/Migrations/` are applied on startup. The database file defaults to `src/TradeBlotter.Api/trade-blotter.db` (gitignored); override it with `ConnectionStrings__TradeBlotter="Data Source=/path/to/file.db"`.
+
+```sh
+dotnet tool restore
+dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data/Migrations
+```
+
 ### Frontend
 
 ```sh
