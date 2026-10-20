@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // UI libraries are installed in Part 1 and first used by the Part 2 frontend; Playwright by Part 3 e2e.
+  // Remove each entry once it is imported.
+  "ignoreDependencies": [
+    "primevue",
+    "@primeuix/themes",
+    "ag-grid-community",
+    "ag-grid-vue3",
+    "@playwright/test"
+  ]
+}

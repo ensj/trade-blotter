@@ -19,3 +19,12 @@ pre-commit:
       root: frontend/
       glob: "**"
       run: npm test
+
+pre-push:
+  parallel: true
+  commands:
+    knip:
+      root: frontend/
+      run: npx knip
+    jscpd:
+      run: frontend/node_modules/.bin/jscpd

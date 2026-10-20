@@ -44,6 +44,9 @@ lefthook install                                        # once per clone (also r
 
 - **pre-commit** (lefthook): Biome and CSharpier fix staged files, the file-length check warns, then `dotnet test` runs if `backend/**` is staged and `npm test` if `frontend/**` is staged.
 - **Claude Code** (`.claude/settings.json`): after every Edit/Write/MultiEdit, `scripts/claude-post-edit.sh` formats and lints the file and runs the file-length check. Lint errors exit 2 so the agent sees them.
+- **pre-push** (lefthook): knip (unused files, exports and dependencies in `frontend/`, config `frontend/knip.jsonc`) and jscpd (duplication across `backend/` and `frontend/src`, fails above 3%, config `.jscpd.json`).
+- `scripts/check-file-length.sh [files]` warns about files over 500 lines and never fails; with no arguments it checks every tracked file.
+- Run the dev tools directly with `npm run lint`, `npm run knip` and `npm run dup` in `frontend/`.
 - `scripts/with-dotnet.sh` puts `~/.dotnet` first on PATH for hooks, since git hooks don't read shell profiles.
 
 ### Mutation testing

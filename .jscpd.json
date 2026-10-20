@@ -1,0 +1,18 @@
+{
+  "path": [
+    "backend/src",
+    "backend/tests",
+    "frontend/src"
+  ],
+  "ignore": [
+    "**/Migrations/**",
+    "**/bin/**",
+    "**/obj/**"
+  ],
+  "minTokens": 50,
+  "threshold": 3,
+  "reporters": [
+    "console"
+  ],
+  "gitignore": true
+}

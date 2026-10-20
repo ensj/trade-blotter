@@ -1,6 +1,5 @@
 import os from 'node:os'
 
-/** @type {import('@stryker-mutator/api/core').PartialStrykerOptions} */
 export default {
   testRunner: 'vitest',
   plugins: ['@stryker-mutator/vitest-runner'],
