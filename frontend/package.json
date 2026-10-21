@@ -11,6 +11,8 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "mutation": "stryker run",
+    "e2e": "playwright test",
+    "e2e:screenshots": "E2E_SCREENSHOTS=1 playwright test",
     "lint": "biome check .",
     "knip": "knip",
     "dup": "cd .. && jscpd"
