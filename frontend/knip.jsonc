@@ -1,13 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  // UI libraries are installed in Part 1 and first used by the Part 2 frontend; Playwright by Part 3 e2e.
-  // Remove each entry once it is imported. src/api/types.ts is the contract, first imported in Part 2.
+  // Remove each entry once it is imported: ag-grid-vue3 by the blotter grid, Playwright by Part 3 e2e.
+  // src/api/types.ts is the contract, first imported by the API module.
   "ignore": ["src/api/types.ts"],
-  "ignoreDependencies": [
-    "primevue",
-    "@primeuix/themes",
-    "ag-grid-community",
-    "ag-grid-vue3",
-    "@playwright/test"
-  ]
+  "ignoreDependencies": ["ag-grid-vue3", "@playwright/test"]
 }
