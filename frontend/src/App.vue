@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { usePositionsStore } from './stores/positions'
+import { useTradesStore } from './stores/trades'
+
+const trades = useTradesStore()
+const positions = usePositionsStore()
+
+onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
+</script>
+
 <template>
   <div class="app">
     <header class="toolbar">

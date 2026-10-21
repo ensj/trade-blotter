@@ -18,7 +18,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,vue}'],
-      exclude: ['src/main.ts', 'src/**/*.test.ts', 'src/**/*.d.ts'],
+      exclude: ['src/main.ts', 'src/test/**', 'src/**/*.test.ts', 'src/**/*.d.ts'],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },
