@@ -5,8 +5,9 @@ import { shallowRef, watch } from 'vue'
 import type { Trade } from '../api/types'
 import { matchesSearch } from '../lib/tradeSearch'
 import { useTradesStore } from '../stores/trades'
-import { emptyState, gridTheme } from '../theme'
+import { gridTheme } from '../theme'
 import { blotterColumns, defaultColDef } from './blotterColumns'
+import { emptyState } from './emptyState'
 
 const props = defineProps<{ search: string }>()
 const store = useTradesStore()
