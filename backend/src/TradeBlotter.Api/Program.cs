@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Positions;
 using TradeBlotter.Api.Features.Trades;
+using TradeBlotter.Api.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,10 @@ builder
         );
         // The contract sends money as JSON numbers; reject "100" instead of coercing it.
         o.JsonSerializerOptions.NumberHandling = JsonNumberHandling.Strict;
-    });
+    })
+    .ConfigureApiBehaviorOptions(o =>
+        o.InvalidModelStateResponseFactory = ValidationProblemFactory.Create
+    );
 builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>

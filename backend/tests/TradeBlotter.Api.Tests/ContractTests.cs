@@ -39,8 +39,8 @@ public class ContractTests(ApiFactory factory) : IClassFixture<ApiFactory>
     [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "Side")]
     [InlineData("""{ "symbol": "AAPL", "side": "Buy", "price": 1 }""", "Quantity")]
     [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1 }""", "Price")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Hold", "quantity": 1, "price": 1 }""", "$.side")]
-    [InlineData("""{ "symbol": "AAPL", "side": 0, "quantity": 1, "price": 1 }""", "$.side")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Hold", "quantity": 1, "price": 1 }""", "Side")]
+    [InlineData("""{ "symbol": "AAPL", "side": 0, "quantity": 1, "price": 1 }""", "Side")]
     public async Task Post_invalid_trade_returns_validation_problem(string body, string errorKey)
     {
         var response = await client.PostAsync("/trades", Json(body));
