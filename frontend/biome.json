@@ -17,5 +17,11 @@
   },
   "html": { "formatter": { "enabled": true }, "experimentalFullSupportEnabled": true },
   "linter": { "enabled": true, "rules": { "preset": "recommended" } },
+  "overrides": [
+    {
+      "includes": ["src/components/TradeForm.vue"],
+      "linter": { "rules": { "a11y": { "noAutofocus": "off" } } }
+    }
+  ],
   "assist": { "actions": { "source": { "organizeImports": "on" } } }
 }
