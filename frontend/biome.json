@@ -15,7 +15,7 @@
   "javascript": {
     "formatter": { "quoteStyle": "single", "semicolons": "asNeeded" }
   },
-  "html": { "formatter": { "enabled": true } },
+  "html": { "formatter": { "enabled": true }, "experimentalFullSupportEnabled": true },
   "linter": { "enabled": true, "rules": { "preset": "recommended" } },
   "assist": { "actions": { "source": { "organizeImports": "on" } } }
 }

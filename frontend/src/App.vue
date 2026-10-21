@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import BlotterGrid from './components/BlotterGrid.vue'
 import { usePositionsStore } from './stores/positions'
 import { useTradesStore } from './stores/trades'
 
@@ -14,7 +15,9 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
     <header class="toolbar">
       <h1 class="title">Trade Blotter</h1>
     </header>
-    <main class="blotter" aria-label="Trades"></main>
+    <main class="blotter" aria-label="Trades">
+      <BlotterGrid />
+    </main>
     <aside class="positions" aria-label="Positions"></aside>
   </div>
 </template>
@@ -25,8 +28,8 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
   grid-template-columns: minmax(0, 1fr) 22rem;
   grid-template-rows: auto minmax(0, 1fr);
   grid-template-areas:
-    'toolbar toolbar'
-    'blotter positions';
+    "toolbar toolbar"
+    "blotter positions";
   gap: 1rem;
   height: 100vh;
   padding: 1rem 1.25rem 1.25rem;
@@ -63,7 +66,7 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
   .app {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(20rem, 1fr) auto;
-    grid-template-areas: 'toolbar' 'blotter' 'positions';
+    grid-template-areas: "toolbar" "blotter" "positions";
     height: auto;
     min-height: 100vh;
   }

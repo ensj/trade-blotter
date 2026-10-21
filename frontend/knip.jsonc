@@ -1,5 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  // Remove each entry once it is imported: ag-grid-vue3 by the blotter grid, Playwright by Part 3 e2e.
-  "ignoreDependencies": ["ag-grid-vue3", "@playwright/test"]
+  // Remove each entry once it is imported: Playwright by Part 3 e2e.
+  "ignoreDependencies": ["@playwright/test"]
 }
