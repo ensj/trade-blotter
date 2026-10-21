@@ -26,10 +26,10 @@ public class ContractTests(ApiFactory factory) : IClassFixture<ApiFactory>
     }
 
     [Theory]
-    [InlineData("""{ "side": "Buy", "quantity": 1, "price": 1 }""", "Symbol")]
-    [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "Side")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "price": 1 }""", "Quantity")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1 }""", "Price")]
+    [InlineData("""{ "side": "Buy", "quantity": 1, "price": 1 }""", "symbol")]
+    [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "side")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "price": 1 }""", "quantity")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1 }""", "price")]
     public async Task Post_missing_field_returns_validation_problem(string body, string errorKey)
     {
         var response = await client.PostAsync("/trades", Json(body));

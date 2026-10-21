@@ -15,7 +15,7 @@ public sealed class ErrorHandlingTests : IDisposable
     private readonly ApiFactory factory = new();
 
     [Theory]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": -1, "price": 1 }""", "Quantity")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": -1, "price": 1 }""", "quantity")]
     [InlineData("", "")]
     public async Task Bad_request_bodies_return_400_validation_problem(string body, string key)
     {
@@ -27,37 +27,37 @@ public sealed class ErrorHandlingTests : IDisposable
     [Theory]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Short", "quantity": 1, "price": 1 }""",
-        "Side",
+        "side",
         "Side must be Buy or Sell."
     )]
     [InlineData(
         """{ "symbol": "AAPL", "side": 0, "quantity": 1, "price": 1 }""",
-        "Side",
+        "side",
         "Side must be Buy or Sell."
     )]
     [InlineData(
         """{ "symbol": "AAPL", "Side": "buy!", "quantity": 1, "price": 1 }""",
-        "Side",
+        "side",
         "Side must be Buy or Sell."
     )]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Buy", "quantity": "1", "price": 1 }""",
-        "Quantity",
+        "quantity",
         "Quantity must be a number."
     )]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Buy", "quantity": 1e30, "price": 1 }""",
-        "Quantity",
+        "quantity",
         "Quantity must be a number."
     )]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Buy", "quantity": 1, "price": true }""",
-        "Price",
+        "price",
         "Price must be a number."
     )]
     [InlineData(
         """{ "symbol": 42, "side": "Buy", "quantity": 1, "price": 1 }""",
-        "Symbol",
+        "symbol",
         "Symbol must be a string."
     )]
     [InlineData(

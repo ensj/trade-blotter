@@ -1,11 +1,14 @@
 using System.Reflection;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
 
 namespace TradeBlotter.Api.Http;
 
-// Replaces System.Text.Json's messages, which name .NET types, with one plain error per bad field.
+// Replaces System.Text.Json's messages, which name .NET types, with one plain error per bad field,
+// and keys every error by its camelCase JSON name.
 public static class ValidationProblemFactory
 {
     public const string InvalidBodyMessage = "The request body is not a valid JSON trade.";
@@ -18,13 +21,30 @@ public static class ValidationProblemFactory
             .ToList();
         var state = jsonPaths.Count == 0 ? context.ModelState : Translate(jsonPaths, context);
 
-        var problem = context
-            .HttpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>()
+        var services = context.HttpContext.RequestServices;
+        var problem = services
+            .GetRequiredService<ProblemDetailsFactory>()
             .CreateValidationProblemDetails(context.HttpContext, state);
+        var naming = services
+            .GetRequiredService<IOptions<JsonOptions>>()
+            .Value.JsonSerializerOptions.PropertyNamingPolicy;
+        if (naming is not null)
+            RenameKeys(problem.Errors, naming);
         return new BadRequestObjectResult(problem)
         {
             ContentTypes = { "application/problem+json", "application/problem+xml" },
         };
+    }
+
+    // Model state keys are C# property names; clients send camelCase JSON, so key errors the same way.
+    private static void RenameKeys(IDictionary<string, string[]> errors, JsonNamingPolicy naming)
+    {
+        var renamed = errors
+            .GroupBy(e => naming.ConvertName(e.Key))
+            .ToDictionary(g => g.Key, g => g.SelectMany(e => e.Value).ToArray());
+        errors.Clear();
+        foreach (var (key, messages) in renamed)
+            errors[key] = messages;
     }
 
     // Keeps only the JSON errors: the "request field is required" error that follows a failed bind is noise.

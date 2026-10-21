@@ -32,7 +32,7 @@ dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data
 
 Backend behavior worth knowing:
 
-- Validation lives in `Features/Trades/TradeValidator`, run by MVC through `CreateTradeRequest : IValidatableObject`, so every 400 has the same ValidationProblemDetails shape. `[Required]` reports missing fields; the validator checks values only once they are present.
+- Validation lives in `Features/Trades/TradeValidator`, run by MVC through `CreateTradeRequest : IValidatableObject`, so every 400 has the same ValidationProblemDetails shape. Error keys are the camelCase JSON field names (`symbol`, `side`, `quantity`, `price`), set in `Http/ValidationProblemFactory` from MVC's JSON naming policy. `[Required]` reports missing fields; the validator checks values only once they are present.
 - Money must be a JSON number. `"quantity": "100"` is a 400, not coerced.
 - SQLite stores decimals as TEXT and reads `100` back as `100.0`, so responses may carry a trailing `.0`. The value is identical.
 - 500s are ProblemDetails with no exception detail outside Development.
