@@ -67,9 +67,9 @@ test('toRequest trims and upper-cases the symbol', () => {
 })
 
 test('toRequest refuses an incomplete draft', () => {
-  expect(() => toRequest({ ...valid, side: null })).toThrow()
-  expect(() => toRequest({ ...valid, quantity: null })).toThrow()
-  expect(() => toRequest({ ...valid, price: null })).toThrow()
+  expect(() => toRequest({ ...valid, side: null })).toThrow('toRequest needs a validated draft')
+  expect(() => toRequest({ ...valid, quantity: null })).toThrow('toRequest needs a validated draft')
+  expect(() => toRequest({ ...valid, price: null })).toThrow('toRequest needs a validated draft')
 })
 
 describe('mapProblemErrors', () => {
