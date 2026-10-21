@@ -31,24 +31,20 @@ defineExpose({ SideCellRenderer })
 </script>
 
 <template>
-  <AgGridVue
-    class="grid"
-    :theme="gridTheme"
-    :row-data="store.trades"
-    :column-defs="blotterColumns"
-    :default-col-def="defaultColDef"
-    :get-row-id="getRowId"
-    :is-external-filter-present="isExternalFilterPresent"
-    :does-external-filter-pass="doesExternalFilterPass"
-    :loading="store.loading"
-    overlay-no-rows-template="No trades yet. Use + New trade to add one."
-    @grid-ready="onGridReady"
-  />
+  <section class="panel">
+    <h2 class="panel-heading">Trades</h2>
+    <AgGridVue
+      class="grid"
+      :theme="gridTheme"
+      :row-data="store.trades"
+      :column-defs="blotterColumns"
+      :default-col-def="defaultColDef"
+      :get-row-id="getRowId"
+      :is-external-filter-present="isExternalFilterPresent"
+      :does-external-filter-pass="doesExternalFilterPass"
+      :loading="store.loading"
+      overlay-no-rows-template="No trades yet. Use + New trade to add one."
+      @grid-ready="onGridReady"
+    />
+  </section>
 </template>
-
-<style scoped>
-.grid {
-  height: 100%;
-  width: 100%;
-}
-</style>
