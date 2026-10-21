@@ -2,6 +2,7 @@ import type { ColDef, ValueFormatterParams, ValueGetterParams } from 'ag-grid-co
 import { expect, test } from 'vitest'
 import type { Trade } from '../api/types'
 import { blotterColumns, defaultColDef } from './blotterColumns'
+import SideCellRenderer from './SideCellRenderer.vue'
 
 const trade: Trade = {
   id: '1',
@@ -70,5 +71,5 @@ test('formats the timestamp in local time and tolerates a missing value', () => 
 })
 
 test('renders side with the custom renderer', () => {
-  expect(column('Side').cellRenderer).toBe('SideCellRenderer')
+  expect(column('Side').cellRenderer).toBe(SideCellRenderer)
 })

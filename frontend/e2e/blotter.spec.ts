@@ -109,14 +109,16 @@ test('sorting by a column works', async ({ page }) => {
     .toEqual(['TSLA', 'TSLA', 'NFLX', 'NFLX', 'MSFT', 'AMD', 'AMD', 'AAPL', 'AAPL'])
 })
 
-test('Buy and Sell use different colours', async ({ page }) => {
-  const colour = (selector: string) =>
+test('Buy is green and Sell is red', async ({ page }) => {
+  // The dominant RGB channel names the hue; slate body text is blue-dominant, so it fails both.
+  const dominant = (selector: string) =>
     blotter(page)
       .locator(selector)
       .first()
-      .evaluate((el) => getComputedStyle(el).color.match(/\d+/g)?.slice(0, 3).map(Number) ?? [])
-  const [buyR, buyG] = await colour('.side.buy')
-  const [sellR, sellG] = await colour('.side.sell')
-  expect(buyG).toBeGreaterThan(buyR ?? 0)
-  expect(sellR).toBeGreaterThan(sellG ?? 0)
+      .evaluate((el) => {
+        const [r = 0, g = 0, b = 0] = getComputedStyle(el).color.match(/\d+/g)?.map(Number) ?? []
+        return g > r && g > b ? 'green' : r > g && r > b ? 'red' : 'other'
+      })
+  expect(await dominant('.side.buy')).toBe('green')
+  expect(await dominant('.side.sell')).toBe('red')
 })

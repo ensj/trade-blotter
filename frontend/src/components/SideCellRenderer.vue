@@ -9,16 +9,18 @@ defineProps<{ params: ICellRendererParams<unknown, Side> }>()
   <span :class="['side', params.value === 'Buy' ? 'buy' : 'sell']">{{ params.value }}</span>
 </template>
 
-<style scoped>
-.side {
+<!-- Not scoped: ag-grid-vue3 wraps a renderer passed by reference, which drops the scope id. -->
+<style>
+.side.buy,
+.side.sell {
   font-weight: 600;
 }
 
-.buy {
+.side.buy {
   color: var(--p-green-600);
 }
 
-.sell {
+.side.sell {
   color: var(--p-red-600);
 }
 </style>

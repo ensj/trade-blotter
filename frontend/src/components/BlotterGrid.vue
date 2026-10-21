@@ -7,7 +7,6 @@ import { matchesSearch } from '../lib/tradeSearch'
 import { useTradesStore } from '../stores/trades'
 import { emptyState, gridTheme } from '../theme'
 import { blotterColumns, defaultColDef } from './blotterColumns'
-import SideCellRenderer from './SideCellRenderer.vue'
 
 const props = defineProps<{ search: string }>()
 const store = useTradesStore()
@@ -26,8 +25,6 @@ watch(
   () => props.search,
   () => gridApi.value?.onFilterChanged(),
 )
-
-defineExpose({ SideCellRenderer })
 </script>
 
 <template>

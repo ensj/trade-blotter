@@ -2,6 +2,7 @@ import type { ColDef } from 'ag-grid-community'
 import type { Trade } from '../api/types'
 import { formatMoney, formatPrice, formatQuantity, formatTimestamp } from '../lib/format'
 import { notional } from '../lib/notional'
+import SideCellRenderer from './SideCellRenderer.vue'
 
 export const blotterColumns: ColDef<Trade>[] = [
   {
@@ -17,7 +18,7 @@ export const blotterColumns: ColDef<Trade>[] = [
     field: 'side',
     headerName: 'Side',
     cellDataType: 'text',
-    cellRenderer: 'SideCellRenderer',
+    cellRenderer: SideCellRenderer,
     minWidth: 80,
   },
   {
