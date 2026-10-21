@@ -5,6 +5,7 @@ import { useToast } from 'primevue/usetoast'
 import { ref } from 'vue'
 import { ApiError, errorMessage } from '../api/http'
 import type { CreateTradeRequest } from '../api/types'
+import { formatPrice, formatQuantity } from '../lib/format'
 import { type FieldErrors, mapProblemErrors } from '../lib/tradeValidation'
 import { useTradesStore } from '../stores/trades'
 import TradeForm from './TradeForm.vue'
@@ -31,7 +32,7 @@ async function submit(request: CreateTradeRequest) {
     toast.add({
       severity: 'success',
       summary: 'Trade added',
-      detail: `${trade.side} ${trade.quantity.toLocaleString()} ${trade.symbol} @ ${trade.price.toLocaleString()}`,
+      detail: `${trade.side} ${formatQuantity(trade.quantity)} ${trade.symbol} @ ${formatPrice(trade.price)}`,
       life: 3000,
     })
   } catch (e) {

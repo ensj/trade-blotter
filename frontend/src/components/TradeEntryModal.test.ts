@@ -17,7 +17,7 @@ const DialogStub = defineComponent({
   template: '<div v-if="visible" class="dialog"><slot /></div>',
 })
 
-const request: CreateTradeRequest = { symbol: 'AAPL', side: 'Buy', quantity: 1500, price: 187.25 }
+const request: CreateTradeRequest = { symbol: 'AAPL', side: 'Buy', quantity: 1500, price: 131.4567 }
 const created = { ...request, id: 'x', timestamp: '2026-10-19T14:03:11.123Z' }
 
 beforeEach(() => {
@@ -46,7 +46,9 @@ test('closes and toasts after a successful create', async () => {
   expect(toastAdd).toHaveBeenCalledWith(
     expect.objectContaining({ severity: 'success', summary: 'Trade added' }),
   )
-  expect(toastAdd.mock.calls[0]?.[0].detail).toContain('AAPL')
+  expect(toastAdd.mock.calls[0]?.[0].detail).toBe(
+    `Buy ${(1500).toLocaleString()} AAPL @ ${(131.4567).toLocaleString(undefined, { maximumFractionDigits: 4 })}`,
+  )
 })
 
 test('maps a 400 ProblemDetails onto fields and form messages', async () => {
