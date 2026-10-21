@@ -55,8 +55,10 @@ export const blotterColumns: ColDef<Trade>[] = [
     valueFormatter: (p) => (p.value == null ? '' : formatMoney(p.value)),
     flex: 1,
     minWidth: 110,
+    resizable: false,
   },
 ]
 
 // Text columns get fixed widths sized to their content; the numeric columns share the rest.
+// The last column is not resizable, so no handle sits against the grid edge.
 export const defaultColDef: ColDef<Trade> = { sortable: true }

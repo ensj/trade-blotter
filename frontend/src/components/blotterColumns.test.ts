@@ -64,6 +64,17 @@ test('sizes text columns to content and lets numeric columns share the rest', ()
   expect(defaultColDef.flex).toBeUndefined()
 })
 
+test('only the last column hides its resize handle', () => {
+  expect(blotterColumns.map((c) => c.resizable)).toEqual([
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    false,
+  ])
+})
+
 test('right-aligns the numeric columns', () => {
   for (const header of ['Qty', 'Price', 'Notional']) {
     expect(column(header).type).toBe('rightAligned')

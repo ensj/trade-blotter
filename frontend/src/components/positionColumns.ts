@@ -19,6 +19,7 @@ export const positionColumns: ColDef<Position>[] = [
     type: 'rightAligned',
     flex: 1,
     minWidth: 80,
+    resizable: false,
     valueFormatter: (p) => formatPrice(p.value ?? 0),
   },
 ]

@@ -25,6 +25,10 @@ test('fixes the symbol width and lets the numbers share the rest', () => {
   expect(positionDefaultColDef.flex).toBeUndefined()
 })
 
+test('only the last column hides its resize handle', () => {
+  expect(positionColumns.map((c) => c.resizable)).toEqual([undefined, undefined, false])
+})
+
 test('flags negative net quantity as short', () => {
   const rule = (netQuantity.cellClassRules as Record<string, (p: CellClassParams) => boolean>)[
     'short-position'
