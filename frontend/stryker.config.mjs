@@ -8,6 +8,7 @@ export default {
     '!src/**/*.test.ts',
     '!src/**/*.d.ts',
     '!src/main.ts',
+    '!src/test/**',
     '!src/components/**',
   ],
   concurrency: Math.max(1, os.availableParallelism() - 1),

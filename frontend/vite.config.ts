@@ -1,15 +1,20 @@
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
+import { mockApi } from './mock/mockApi.ts'
+
+const useMock = process.env.MOCK_API === '1'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), ...(useMock ? [mockApi()] : [])],
   server: {
     port: 5173,
     strictPort: true,
-    proxy: {
-      '/trades': 'http://localhost:5080',
-      '/positions': 'http://localhost:5080',
-    },
+    proxy: useMock
+      ? undefined
+      : {
+          '/trades': 'http://localhost:5080',
+          '/positions': 'http://localhost:5080',
+        },
   },
   test: {
     environment: 'jsdom',
@@ -18,7 +23,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,vue}'],
-      exclude: ['src/main.ts', 'src/**/*.test.ts', 'src/**/*.d.ts'],
+      exclude: ['src/main.ts', 'src/test/**', 'src/**/*.test.ts', 'src/**/*.d.ts'],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },
