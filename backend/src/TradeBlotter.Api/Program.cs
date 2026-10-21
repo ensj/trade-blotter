@@ -36,6 +36,7 @@ builder.Services.AddSwaggerGen(o =>
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlite(builder.Configuration.GetConnectionString("TradeBlotter"))
 );
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<TradeService>();
 builder.Services.AddScoped<PositionService>();
 
