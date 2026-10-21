@@ -5,7 +5,6 @@
     "frontend/src"
   ],
   "ignore": [
-    "**/Migrations/**",
     "**/bin/**",
     "**/obj/**",
     "**/api/schema.d.ts"

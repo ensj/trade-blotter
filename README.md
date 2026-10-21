@@ -62,12 +62,7 @@ Unexpected failures return `500` ProblemDetails without exception detail. Contra
 
 ### Backend notes
 
-SQLite via EF Core 8. Migrations in `src/TradeBlotter.Api/Data/Migrations/` are applied on startup. The database file defaults to `src/TradeBlotter.Api/trade-blotter.db` (gitignored); override it with `ConnectionStrings__TradeBlotter="Data Source=/path/to/file.db"`.
-
-```sh
-dotnet tool restore
-dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data/Migrations
-```
+SQLite via EF Core 8. There are no migrations: the schema is created from the model on startup with `EnsureCreated`, which does nothing if the database already exists. After changing the model, delete the `.db` file so the next start recreates it. The database file defaults to `src/TradeBlotter.Api/trade-blotter.db` (gitignored); override it with `ConnectionStrings__TradeBlotter="Data Source=/path/to/file.db"`.
 
 Backend behavior worth knowing:
 
@@ -112,7 +107,7 @@ npm run build
 ### Tests
 
 ```sh
-cd backend && dotnet test   # xUnit; fails below 80% line coverage (coverlet; Program.cs and Migrations excluded)
+cd backend && dotnet test   # xUnit; fails below 80% line coverage (coverlet; Program.cs excluded)
 cd frontend && npm test     # Vitest; fails below 80% lines/branches/functions/statements
 ```
 

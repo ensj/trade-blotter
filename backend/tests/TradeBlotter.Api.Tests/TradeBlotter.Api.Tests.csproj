@@ -16,7 +16,7 @@
     <Threshold>80</Threshold>
     <ThresholdType>line</ThresholdType>
     <ThresholdStat>total</ThresholdStat>
-    <ExcludeByFile>**/Program.cs%2c**/Migrations/*.cs</ExcludeByFile>
+    <ExcludeByFile>**/Program.cs</ExcludeByFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@ if [ $# -eq 0 ]; then
 fi
 for f in "$@"; do
   case "$f" in
-    *package-lock.json | *.svg | */Migrations/* | docs/* | transcripts/*) continue ;;
+    *package-lock.json | *.svg | docs/* | transcripts/*) continue ;;
   esac
   [ -f "$f" ] || continue
   lines=$(wc -l <"$f" | tr -d ' ')

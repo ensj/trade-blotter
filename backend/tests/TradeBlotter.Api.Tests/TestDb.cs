@@ -13,7 +13,7 @@ public sealed class TestDb : IDisposable
     {
         connection.Open();
         using var db = NewContext();
-        db.Database.Migrate();
+        db.Database.EnsureCreated();
     }
 
     public AppDbContext NewContext() =>
