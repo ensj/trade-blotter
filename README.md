@@ -71,7 +71,7 @@ dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data
 
 Backend behavior worth knowing:
 
-- Validation lives in `Features/Trades/TradeValidator`, run by MVC through `CreateTradeRequest : IValidatableObject`, so every 400 has the same ValidationProblemDetails shape. Error keys are the camelCase JSON field names (`symbol`, `side`, `quantity`, `price`), set in `Http/ValidationProblemFactory` from MVC's JSON naming policy. `[Required]` reports missing fields; the validator checks values only once they are present.
+- Validation lives in `Features/Trades/TradeValidator`, run per property by `[TradeRules]`, so every invalid field is reported in one 400 with the same ValidationProblemDetails shape. `side` binds as a string and is validated with the other fields; OpenAPI still documents it as the `Side` enum. Error keys are the camelCase JSON field names (`symbol`, `side`, `quantity`, `price`), set in `Http/ValidationProblemFactory` (HTTP plumbing shared by controllers) from MVC's JSON naming policy.
 - Money must be a JSON number. `"quantity": "100"` is a 400, not coerced.
 - SQLite stores decimals as TEXT and reads `100` back as `100.0`, so responses may carry a trailing `.0`. The value is identical.
 - 500s are ProblemDetails with no exception detail outside Development.
@@ -123,7 +123,7 @@ lefthook install                                        # once per clone (also r
 ```
 
 - **pre-commit** (lefthook): Biome and CSharpier fix staged files, the file-length check warns, then `dotnet test` runs if `backend/**` is staged and `npm test` if `frontend/**` is staged.
-- **Claude Code** (`.claude/settings.json`): after every Edit/Write/MultiEdit, `scripts/claude-post-edit.sh` formats and lints the file and runs the file-length check. Lint errors exit 2 so the agent sees them.
+- **Claude Code** (`.claude/settings.json`): after every Edit/Write/MultiEdit, `scripts/claude-post-edit.sh` formats and lints the file (including root-level `*.json`) and runs the file-length check. It requires `jq`. Lint errors exit 2 so the agent sees them.
 - **pre-push** (lefthook): knip (unused files, exports and dependencies in `frontend/`, config `frontend/knip.jsonc`) and jscpd (duplication across `backend/` and `frontend/src`, fails above 3%, config `.jscpd.json`).
 - `scripts/check-file-length.sh [files]` warns about files over 500 lines and never fails; with no arguments it checks every tracked file.
 - Run the dev tools directly with `npm run lint`, `npm run knip` and `npm run dup` in `frontend/`.
