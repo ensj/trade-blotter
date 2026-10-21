@@ -6,7 +6,7 @@ namespace TradeBlotter.Api.Features.Positions;
 // Average-cost positions, unrounded. Rules: docs/superpowers/specs/2026-10-19-trade-blotter-design.md.
 public static class PositionCalculator
 {
-    public static IReadOnlyList<PositionResponse> Calculate(IEnumerable<Trade> trades)
+    public static IReadOnlyList<Position> Calculate(IEnumerable<Trade> trades)
     {
         var positions = new Dictionary<string, (decimal Net, decimal Avg)>();
         foreach (var trade in trades.OrderBy(t => t.Timestamp).ThenBy(t => t.Sequence))
@@ -18,7 +18,7 @@ public static class PositionCalculator
         return positions
             .Where(p => p.Value.Net != 0)
             .OrderBy(p => p.Key, StringComparer.Ordinal)
-            .Select(p => new PositionResponse(p.Key, p.Value.Net, p.Value.Avg))
+            .Select(p => new Position(p.Key, p.Value.Net, p.Value.Avg))
             .ToList();
     }
 

@@ -15,19 +15,79 @@ public sealed class ErrorHandlingTests : IDisposable
     private readonly ApiFactory factory = new();
 
     [Theory]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": -1, "price": 1 }""", "Quantity")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Short", "quantity": 1, "price": 1 }""", "$.side")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1, """, "$")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": -1, "price": 1 }""", "quantity")]
+    [InlineData("", "")]
+    public async Task Bad_request_bodies_return_400_validation_problem(string body, string key)
+    {
+        var problem = await PostExpectingValidationProblem(body);
+
+        Assert.Contains(key, problem.Errors.Keys);
+    }
+
+    [Theory]
+    [InlineData(
+        """{ "symbol": "AAPL", "side": "Short", "quantity": 1, "price": 1 }""",
+        "side",
+        "Side must be Buy or Sell."
+    )]
+    [InlineData(
+        """{ "symbol": "AAPL", "side": 0, "quantity": 1, "price": 1 }""",
+        "side",
+        "Side must be Buy or Sell."
+    )]
+    [InlineData(
+        """{ "symbol": "AAPL", "Side": "buy!", "quantity": 1, "price": 1 }""",
+        "side",
+        "Side must be Buy or Sell."
+    )]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Buy", "quantity": "1", "price": 1 }""",
-        "$.quantity"
+        "quantity",
+        "Quantity must be a number."
     )]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Buy", "quantity": 1e30, "price": 1 }""",
-        "$.quantity"
+        "quantity",
+        "Quantity must be a number."
     )]
-    [InlineData("", "")]
-    public async Task Bad_request_bodies_return_400_validation_problem(string body, string key)
+    [InlineData(
+        """{ "symbol": "AAPL", "side": "Buy", "quantity": 1, "price": true }""",
+        "price",
+        "Price must be a number."
+    )]
+    [InlineData(
+        """{ "symbol": 42, "side": "Buy", "quantity": 1, "price": 1 }""",
+        "symbol",
+        "Symbol must be a string."
+    )]
+    [InlineData(
+        """{ "symbol": "AAPL", "side": "Buy", "quantity": 1, """,
+        "$",
+        "The request body is not a valid JSON trade."
+    )]
+    [InlineData("""[1, 2]""", "$", "The request body is not a valid JSON trade.")]
+    public async Task Json_binding_errors_return_one_clean_error(
+        string body,
+        string key,
+        string message
+    )
+    {
+        var problem = await PostExpectingValidationProblem(body);
+
+        var error = Assert.Single(problem.Errors);
+        Assert.Equal(key, error.Key);
+        Assert.Equal([message], error.Value);
+    }
+
+    [Fact]
+    public async Task Json_null_body_is_a_validation_problem_not_a_crash()
+    {
+        var problem = await PostExpectingValidationProblem("null");
+
+        Assert.NotEmpty(problem.Errors);
+    }
+
+    private async Task<ValidationProblemDetails> PostExpectingValidationProblem(string body)
     {
         var response = await factory
             .CreateClient()
@@ -37,7 +97,7 @@ public sealed class ErrorHandlingTests : IDisposable
         Assert.Equal(ProblemJson, response.Content.Headers.ContentType?.MediaType);
         var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.Equal(400, problem!.Status);
-        Assert.Contains(key, problem.Errors.Keys);
+        return problem;
     }
 
     [Fact]

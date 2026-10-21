@@ -76,12 +76,12 @@ public sealed class TradesApiTests : IDisposable
     [Theory]
     [InlineData(
         """{ "symbol": "TOOLONGSYMBOL", "side": "Buy", "quantity": 1, "price": 1 }""",
-        "Symbol"
+        "symbol"
     )]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 0, "price": 1 }""", "Quantity")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 0, "price": 1 }""", "quantity")]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Buy", "quantity": 1, "price": 1.23456 }""",
-        "Price"
+        "price"
     )]
     public async Task Post_invalid_values_returns_validation_problem(string body, string key)
     {

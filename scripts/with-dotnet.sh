@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Runs a command with ~/.dotnet first on PATH when present; git hooks don't read ~/.zshenv.
-if [ -d "$HOME/.dotnet" ]; then
-  export DOTNET_ROOT="$HOME/.dotnet" PATH="$HOME/.dotnet:$PATH"
-fi
+# Runs a command with the .NET 8 SDK from ~/.dotnet on PATH.
+. "$(dirname "$0")/dotnet-env.sh"
 exec "$@"

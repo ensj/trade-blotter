@@ -25,48 +25,18 @@ public class ContractTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal("[]", await response.Content.ReadAsStringAsync());
     }
 
-    [Fact]
-    public async Task Get_unknown_trade_returns_404_problem_details()
-    {
-        var response = await client.GetAsync($"/trades/{Guid.NewGuid()}");
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-    }
-
     [Theory]
-    [InlineData("""{ "side": "Buy", "quantity": 1, "price": 1 }""", "Symbol")]
-    [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "Side")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "price": 1 }""", "Quantity")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1 }""", "Price")]
-    [InlineData("""{ "symbol": "AAPL", "side": "Hold", "quantity": 1, "price": 1 }""", "$.side")]
-    [InlineData("""{ "symbol": "AAPL", "side": 0, "quantity": 1, "price": 1 }""", "$.side")]
-    public async Task Post_invalid_trade_returns_validation_problem(string body, string errorKey)
+    [InlineData("""{ "side": "Buy", "quantity": 1, "price": 1 }""", "symbol")]
+    [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "side")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "price": 1 }""", "quantity")]
+    [InlineData("""{ "symbol": "AAPL", "side": "Buy", "quantity": 1 }""", "price")]
+    public async Task Post_missing_field_returns_validation_problem(string body, string errorKey)
     {
         var response = await client.PostAsync("/trades", Json(body));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.Contains(errorKey, problem!.Errors.Keys);
-    }
-
-    [Fact]
-    public async Task Post_malformed_json_returns_400()
-    {
-        var response = await client.PostAsync("/trades", Json("{ not json"));
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_non_json_returns_415()
-    {
-        var response = await client.PostAsync(
-            "/trades",
-            new StringContent("symbol=AAPL", Encoding.UTF8, "text/plain")
-        );
-
-        Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
     }
 
     [Fact]

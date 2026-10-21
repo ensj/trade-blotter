@@ -21,12 +21,3 @@ public sealed class CreateTradeRequest : IValidatableObject
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
         TradeValidator.Validate(this);
 }
-
-public sealed record TradeResponse(
-    Guid Id,
-    string Symbol,
-    Side Side,
-    decimal Quantity,
-    decimal Price,
-    DateTime Timestamp
-);
