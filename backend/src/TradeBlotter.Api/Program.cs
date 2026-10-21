@@ -26,6 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {
     o.SupportNonNullableReferenceTypes();
+    o.SchemaFilter<SideSchemaFilter>();
     // Swashbuckle maps decimal to "double"; money is decimal end to end.
     o.MapType<decimal>(() => new OpenApiSchema { Type = "number", Format = "decimal" });
     o.MapType<decimal?>(() =>

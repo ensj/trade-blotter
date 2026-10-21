@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Time.Testing;
+using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Trades;
 using static TradeBlotter.Api.Tests.Trades.TradeValidatorTests;
 
@@ -16,7 +17,7 @@ public sealed class TradeServiceTests : IDisposable
     {
         var created = await Service()
             .CreateAsync(
-                Request(symbol: " aapl ", side: Side.Sell, quantity: 2.5m, price: 10m),
+                Request(symbol: " aapl ", side: "sell", quantity: 2.5m, price: 10m),
                 default
             );
 

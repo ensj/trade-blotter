@@ -1,3 +1,5 @@
+using TradeBlotter.Api.Data;
+
 namespace TradeBlotter.Api.Features.Trades;
 
 public sealed record TradeResponse(

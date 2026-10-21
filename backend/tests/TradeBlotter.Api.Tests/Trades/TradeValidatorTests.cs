@@ -1,3 +1,4 @@
+using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Trades;
 
 namespace TradeBlotter.Api.Tests.Trades;
@@ -33,6 +34,30 @@ public class TradeValidatorTests
         Assert.Equal(["Symbol"], ErrorKeys(Request(symbol: symbol)));
 
     [Theory]
+    [InlineData("Buy")]
+    [InlineData("Sell")]
+    [InlineData("buy")]
+    [InlineData("SELL")]
+    public void Valid_sides_pass(string side) =>
+        Assert.Empty(TradeValidator.Validate(Request(side: side)));
+
+    [Theory]
+    [InlineData("Hold")]
+    [InlineData("")]
+    [InlineData(" Buy")]
+    [InlineData("0")]
+    [InlineData("1")]
+    [InlineData("Buy,Sell")]
+    public void Invalid_sides_fail(string side) =>
+        Assert.Equal(["Side"], ErrorKeys(Request(side: side)));
+
+    [Theory]
+    [InlineData("Buy", Side.Buy)]
+    [InlineData("sell", Side.Sell)]
+    public void ParseSide_ignores_case(string side, Side expected) =>
+        Assert.Equal(expected, TradeValidator.ParseSide(side));
+
+    [Theory]
     [InlineData("0.0001")]
     [InlineData("1")]
     [InlineData("1000000000")]
@@ -62,15 +87,17 @@ public class TradeValidatorTests
     [Fact]
     public void Every_invalid_field_is_reported()
     {
-        var errors = ErrorKeys(Request(symbol: "!", quantity: 0m, price: -1m));
+        var errors = ErrorKeys(Request(symbol: "!", side: "Hold", quantity: 0m, price: -1m));
 
-        Assert.Equal(["Symbol", "Quantity", "Price"], errors);
+        Assert.Equal(["Symbol", "Side", "Quantity", "Price"], errors);
     }
 
     [Fact]
     public void Errors_carry_a_message_naming_the_field()
     {
-        var errors = TradeValidator.Validate(Request(symbol: "!", quantity: 0m, price: 0m));
+        var errors = TradeValidator.Validate(
+            Request(symbol: "!", side: "Hold", quantity: 0m, price: 0m)
+        );
 
         Assert.All(errors, e => Assert.StartsWith(e.MemberNames.Single(), e.ErrorMessage));
     }
@@ -86,7 +113,7 @@ public class TradeValidatorTests
 
     internal static CreateTradeRequest Request(
         string symbol = "AAPL",
-        Side side = Side.Buy,
+        string side = "Buy",
         decimal quantity = 100m,
         decimal price = 187.25m
     ) =>

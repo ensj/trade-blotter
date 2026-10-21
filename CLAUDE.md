@@ -23,7 +23,7 @@ The approved design is authoritative: `docs/superpowers/specs/2026-10-19-trade-b
 - Unit test coverage must stay at or above 80% lines (enforced by coverlet and Vitest thresholds).
 - Files have a soft 500-line limit. `scripts/check-file-length.sh` warns; split the file rather than ignore it.
 - Use TDD for logic.
-- Mutation testing runs on demand (`npm run mutation`, `dotnet stryker`), never on a hook.
+- Mutation testing runs on demand (`npm run mutation` in `frontend/`, `scripts/mutation-backend.sh` for the backend), never on a hook. Use the script, not bare `dotnet stryker`: it sets concurrency to cores − 1 and puts .NET 8 on PATH.
 - Update `README.md` whenever configuration changes (tooling, scripts, ports, env vars, dependencies).
 
 ## Commit rules
@@ -44,7 +44,7 @@ Parallel agents edit only their own sections of this file and `README.md`:
 
 <!-- Owned by the backend agent. -->
 
-- Trade validation goes in `Features/Trades/TradeValidator` (runs via `IValidatableObject`), not in controllers or attributes that change `docs/openapi.json`.
+- Trade validation goes in `Features/Trades/TradeValidator`, run per property by `[TradeRules]` so every invalid field is reported at once. Not in controllers, and not in attributes that change `docs/openapi.json`.
 - Inject `TimeProvider`; tests use `FakeTimeProvider`. Never call `DateTime.UtcNow` in features.
 - `PositionCalculator` stays pure and unrounded; rounding to 6 places happens in `PositionService`.
 - Integration tests that write data get their own `ApiFactory`; `ContractTests` assumes an empty DB.

@@ -12,7 +12,7 @@ public sealed class TradeService(AppDbContext db, TimeProvider clock)
         {
             Id = Guid.NewGuid(),
             Symbol = TradeValidator.NormalizeSymbol(request.Symbol!),
-            Side = request.Side!.Value,
+            Side = TradeValidator.ParseSide(request.Side!),
             Quantity = request.Quantity!.Value,
             Price = request.Price!.Value,
             Timestamp = clock.GetUtcNow().UtcDateTime,

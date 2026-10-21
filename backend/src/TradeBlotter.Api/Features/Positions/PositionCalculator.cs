@@ -1,5 +1,4 @@
 using TradeBlotter.Api.Data;
-using TradeBlotter.Api.Features.Trades;
 
 namespace TradeBlotter.Api.Features.Positions;
 
