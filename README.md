@@ -36,6 +36,7 @@ dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data
 cd frontend
 npm install
 npm run dev     # http://localhost:5173; proxies /trades and /positions to the backend on 5080
+npm run dev:mock  # same, but serves /trades and /positions from an in-memory mock (frontend/mock/), no backend
 npm run build
 ```
 
