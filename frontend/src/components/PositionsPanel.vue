@@ -34,6 +34,6 @@ const getRowId = (p: GetRowIdParams<Position>) => p.data.symbol
 }
 
 .grid :deep(.short-position) {
-  color: var(--p-red-600);
+  color: var(--p-red-700);
 }
 </style>

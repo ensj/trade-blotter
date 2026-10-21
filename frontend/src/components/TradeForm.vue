@@ -49,6 +49,7 @@ function submit() {
       <label for="trade-symbol">Symbol</label>
       <!-- The Dialog focuses [autofocus] on open, else its close button; biome.json allows it here. -->
       <InputText
+        size="small"
         id="trade-symbol"
         v-model="draft.symbol"
         class="symbol"
@@ -66,6 +67,7 @@ function submit() {
     <div class="field">
       <span id="trade-side-label" class="label">Side</span>
       <SelectButton
+        size="small"
         v-model="draft.side"
         :options="['Buy', 'Sell']"
         :allow-empty="false"
@@ -81,6 +83,7 @@ function submit() {
     <div class="field">
       <label for="trade-quantity">Quantity</label>
       <InputNumber
+        size="small"
         v-model="draft.quantity"
         input-id="trade-quantity"
         :min-fraction-digits="0"
@@ -96,6 +99,7 @@ function submit() {
     <div class="field">
       <label for="trade-price">Price</label>
       <InputNumber
+        size="small"
         v-model="draft.price"
         input-id="trade-price"
         :min-fraction-digits="2"
@@ -111,12 +115,13 @@ function submit() {
     <div class="actions">
       <Button
         label="Cancel"
+        size="small"
         severity="secondary"
         variant="text"
         type="button"
         @click="emit('cancel')"
       />
-      <Button label="Add trade" type="submit" :loading="submitting" />
+      <Button label="Add trade" type="submit" size="small" :loading="submitting" />
     </div>
   </form>
 </template>

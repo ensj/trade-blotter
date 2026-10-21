@@ -38,6 +38,7 @@ watch(
       :column-defs="blotterColumns"
       :default-col-def="defaultColDef"
       :get-row-id="getRowId"
+      :tooltip-show-delay="300"
       :is-external-filter-present="isExternalFilterPresent"
       :does-external-filter-pass="doesExternalFilterPass"
       :loading="store.loading"

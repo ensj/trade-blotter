@@ -17,10 +17,10 @@ defineProps<{ params: ICellRendererParams<unknown, Side> }>()
 }
 
 .side.buy {
-  color: var(--p-green-600);
+  color: var(--p-green-700);
 }
 
 .side.sell {
-  color: var(--p-red-600);
+  color: var(--p-red-700);
 }
 </style>

@@ -1,6 +1,12 @@
-import type { ColDef, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community'
+import type {
+  ColDef,
+  TooltipCallbackParams,
+  ValueFormatterParams,
+  ValueGetterParams,
+} from 'ag-grid-community'
 import { expect, test } from 'vitest'
 import type { Trade } from '../api/types'
+import { formatTimestamp, formatTradeTime } from '../lib/format'
 import { compareTimestamps } from '../lib/timestamp'
 import { blotterColumns, defaultColDef } from './blotterColumns'
 import SideCellRenderer from './SideCellRenderer.vue'
@@ -46,6 +52,29 @@ test('sorts Time chronologically, not as strings', () => {
   expect(column('Time').comparator).toBe(compareTimestamps)
 })
 
+test('sizes text columns to content and lets numeric columns share the rest', () => {
+  expect(blotterColumns.map((c) => [c.headerName, c.width, c.flex])).toEqual([
+    ['Time', 132, undefined],
+    ['Symbol', 100, undefined],
+    ['Side', 72, undefined],
+    ['Qty', undefined, 1],
+    ['Price', undefined, 1],
+    ['Notional', undefined, 1],
+  ])
+  expect(defaultColDef.flex).toBeUndefined()
+})
+
+test('only the last column hides its resize handle', () => {
+  expect(blotterColumns.map((c) => c.resizable)).toEqual([
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    false,
+  ])
+})
+
 test('right-aligns the numeric columns', () => {
   for (const header of ['Qty', 'Price', 'Notional']) {
     expect(column(header).type).toBe('rightAligned')
@@ -70,9 +99,14 @@ test('formats numbers with thousands separators', () => {
   expect(format('Notional', null)).toBe('')
 })
 
-test('formats the timestamp in local time and tolerates a missing value', () => {
-  expect(format('Time', trade.timestamp)).toMatch(/2026/)
+test('shows a compact local time and the full date in a tooltip', () => {
+  expect(format('Time', trade.timestamp)).toBe(formatTradeTime(trade.timestamp))
   expect(format('Time', undefined)).toBe('')
+  const tooltip = column('Time').tooltip as (p: TooltipCallbackParams<Trade>) => string
+  expect(tooltip({ value: trade.timestamp } as TooltipCallbackParams<Trade>)).toBe(
+    formatTimestamp(trade.timestamp),
+  )
+  expect(tooltip({ value: undefined } as TooltipCallbackParams<Trade>)).toBe('')
 })
 
 test('renders side with the custom renderer', () => {

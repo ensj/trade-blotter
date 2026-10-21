@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import SearchIcon from '@primevue/icons/search'
+import TimesIcon from '@primevue/icons/times'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
+import { useTemplateRef } from 'vue'
 
 const search = defineModel<string>('search', { required: true })
+const input = useTemplateRef<{ $el: HTMLInputElement }>('input')
+
+// The clear button unmounts itself, so hand focus back to the field.
+function clear() {
+  search.value = ''
+  input.value?.$el.focus()
+}
 </script>
 
 <template>
@@ -15,6 +24,7 @@ const search = defineModel<string>('search', { required: true })
         <SearchIcon />
       </InputIcon>
       <InputText
+        ref="input"
         v-model="search"
         type="search"
         placeholder="Search symbol or side"
@@ -22,6 +32,11 @@ const search = defineModel<string>('search', { required: true })
         size="small"
         fluid
       />
+      <InputIcon v-if="search">
+        <button type="button" class="clear" aria-label="Clear search" @click="clear">
+          <TimesIcon />
+        </button>
+      </InputIcon>
     </IconField>
     <div class="actions">
       <slot name="actions" />
@@ -48,6 +63,25 @@ const search = defineModel<string>('search', { required: true })
 
 .search {
   grid-area: search;
+}
+
+/* Our clear button replaces the browser's own. */
+.search :deep(input::-webkit-search-cancel-button) {
+  appearance: none;
+}
+
+.clear {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.clear:hover {
+  color: var(--p-surface-700);
 }
 
 .actions {

@@ -1,7 +1,7 @@
 import type { CellClassParams, ColDef, ValueFormatterParams } from 'ag-grid-community'
 import { expect, test } from 'vitest'
 import type { Position } from '../api/types'
-import { positionColumns } from './positionColumns'
+import { positionColumns, positionDefaultColDef } from './positionColumns'
 
 const column = (field: keyof Position): ColDef<Position> => {
   const found = positionColumns.find((c) => c.field === field)
@@ -14,6 +14,19 @@ const averageCost = column('averageCost')
 test('shows symbol, net quantity and average cost', () => {
   expect(positionColumns.map((c) => c.headerName)).toEqual(['Symbol', 'Net Qty', 'Avg Cost'])
   expect(column('symbol').cellDataType).toBe('text')
+})
+
+test('fixes the symbol width and lets the numbers share the rest', () => {
+  expect(positionColumns.map((c) => [c.field, c.width, c.flex])).toEqual([
+    ['symbol', 90, undefined],
+    ['netQuantity', undefined, 1],
+    ['averageCost', undefined, 1],
+  ])
+  expect(positionDefaultColDef.flex).toBeUndefined()
+})
+
+test('only the last column hides its resize handle', () => {
+  expect(positionColumns.map((c) => c.resizable)).toEqual([undefined, undefined, false])
 })
 
 test('flags negative net quantity as short', () => {
