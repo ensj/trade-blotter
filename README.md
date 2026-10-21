@@ -99,7 +99,8 @@ npm run build
 - **Layout.** `src/App.vue` is a CSS grid: toolbar row, blotter, positions panel beside it (stacked below 900px). The PrimeVue Aura preset uses a sky primary, and the AG Grid Quartz theme reads the same PrimeVue CSS variables (`src/theme.ts`). Dark mode is off.
 - **Code map.** `src/api/` holds stateless fetch calls (ProblemDetails → `ApiError`). `src/stores/` holds the Pinia `trades` and `positions` stores; a successful create re-fetches both. `src/lib/` has pure helpers: formatting, search matching, and validation that mirrors the server. `src/components/` holds the views.
 - **Search** matches symbol or side as a case-insensitive substring, through an AG Grid external filter.
-- **Mutation score** (Stryker.js on `src/stores` and `src/api`, 2026-10-20): 91.80% (56 killed, 5 survived, 0 no coverage). Survivors: three stale-response guards in `src/stores/resource.ts` (`--latest` is equivalent; the error and loading guards are not asserted for an overlapping failure) and, in `src/api/http.ts`, the `ApiError` name and the `status` in the fallback problem body.
+- **Mutation score** (Stryker.js on `src/**/*.ts` except components, tests and `main.ts`, 2026-10-20): **96.53%** (167 killed, 6 survived). `src/lib` 99.11%, `src/api` 94.44%, `src/stores` 88.00%. Survivors: an equivalent `value === null` guard in `tradeValidation.ts` (`Number.isFinite(null)` is already false); in `src/stores/resource.ts`, `++latest → --latest` (equivalent) and two stale-response guards with no test for an older failing request finishing after a newer one; in `src/api/http.ts`, the `ApiError` name and the fallback problem body.
+- **Vitest is pinned to 4.1.12.** `@stryker-mutator/vitest-runner` filters tests by name in a way Vitest 5 doesn't match for tests nested in `describe`, so under Vitest 5 those tests never ran against mutants and the score was understated.
 
 ### API contract
 
