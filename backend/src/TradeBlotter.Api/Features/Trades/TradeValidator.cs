@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using TradeBlotter.Api.Data;
 
 namespace TradeBlotter.Api.Features.Trades;
 
@@ -8,6 +9,9 @@ public static partial class TradeValidator
     private const decimal MaxAmount = 1_000_000_000m;
     private const int MaxDecimalPlaces = 4;
     private const int MaxSymbolLength = 10;
+
+    // Enum.Parse alone would also accept "0" and "Buy,Sell", so callers validate first.
+    public static Side ParseSide(string side) => Enum.Parse<Side>(side, ignoreCase: true);
 
     public static string NormalizeSymbol(string symbol) => symbol.Trim().ToUpperInvariant();
 
@@ -19,6 +23,8 @@ public static partial class TradeValidator
                 $"Symbol must be 1-{MaxSymbolLength} characters of A-Z, 0-9, '.' or '-'.",
                 nameof(request.Symbol)
             );
+        if (request.Side is { } side && !IsValidSide(side))
+            yield return Error("Side must be Buy or Sell.", nameof(request.Side));
         if (request.Quantity is { } quantity && !IsValidAmount(quantity))
             yield return Error(AmountMessage(nameof(request.Quantity)), nameof(request.Quantity));
         if (request.Price is { } price && !IsValidAmount(price))
@@ -27,6 +33,9 @@ public static partial class TradeValidator
 
     private static bool IsValidSymbol(string symbol) =>
         symbol.Length is >= 1 and <= MaxSymbolLength && SymbolPattern().IsMatch(symbol);
+
+    private static bool IsValidSide(string side) =>
+        Enum.GetNames<Side>().Contains(side, StringComparer.OrdinalIgnoreCase);
 
     private static bool IsValidAmount(decimal value) =>
         value > 0 && value <= MaxAmount && decimal.Round(value, MaxDecimalPlaces) == value;

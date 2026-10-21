@@ -24,7 +24,28 @@ public sealed class ErrorHandlingTests : IDisposable
         Assert.Contains(key, problem.Errors.Keys);
     }
 
+    [Fact]
+    public async Task Every_invalid_field_is_reported_at_once()
+    {
+        var problem = await PostExpectingValidationProblem(
+            """{ "symbol": "", "side": "Hold", "quantity": -1 }"""
+        );
+
+        Assert.Equal(["price", "quantity", "side", "symbol"], problem.Errors.Keys.Order());
+        Assert.Equal(["Side must be Buy or Sell."], problem.Errors["side"]);
+    }
+
     [Theory]
+    [InlineData(
+        """{ "symbol": "AAPL", "side": true, "quantity": 1, "price": 1 }""",
+        "side",
+        "Side must be Buy or Sell."
+    )]
+    [InlineData(
+        """{ "symbol": "AAPL", "side": { "x": 1 }, "quantity": 1, "price": 1 }""",
+        "side",
+        "Side must be Buy or Sell."
+    )]
     [InlineData(
         """{ "symbol": "AAPL", "side": "Short", "quantity": 1, "price": 1 }""",
         "side",

@@ -77,8 +77,6 @@ public static class ValidationProblemFactory
     private static string MessageFor(PropertyInfo property)
     {
         var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-        if (type.IsEnum)
-            return $"{property.Name} must be {string.Join(" or ", Enum.GetNames(type))}.";
         if (type == typeof(string))
             return $"{property.Name} must be a string.";
         if (type == typeof(decimal))
