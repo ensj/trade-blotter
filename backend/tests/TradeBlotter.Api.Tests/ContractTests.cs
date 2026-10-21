@@ -59,6 +59,28 @@ public class ContractTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal(187.25m, positions[0].AverageCost);
     }
 
+    [Theory]
+    [InlineData("TradeResponse", "id,symbol,side,quantity,price,timestamp")]
+    [InlineData("PositionResponse", "symbol,netQuantity,averageCost")]
+    [InlineData("CreateTradeRequest", "price,quantity,side,symbol")]
+    public async Task Openapi_marks_every_field_the_api_always_sends_as_required(
+        string schema,
+        string fields
+    )
+    {
+        using var doc = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json"));
+        var required = doc
+            .RootElement.GetProperty("components")
+            .GetProperty("schemas")
+            .GetProperty(schema)
+            .GetProperty("required")
+            .EnumerateArray()
+            .Select(e => e.GetString())
+            .Order();
+
+        Assert.Equal(fields.Split(',').Order(), required);
+    }
+
     // Set UPDATE_OPENAPI=1 to rewrite docs/openapi.json from the running app.
     [Fact]
     public async Task Committed_openapi_document_matches_the_app()

@@ -228,6 +228,11 @@
         "additionalProperties": false
       },
       "PositionResponse": {
+        "required": [
+          "averageCost",
+          "netQuantity",
+          "symbol"
+        ],
         "type": "object",
         "properties": {
           "symbol": {
@@ -279,6 +284,14 @@
         "type": "string"
       },
       "TradeResponse": {
+        "required": [
+          "id",
+          "price",
+          "quantity",
+          "side",
+          "symbol",
+          "timestamp"
+        ],
         "type": "object",
         "properties": {
           "id": {
