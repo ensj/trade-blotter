@@ -14,6 +14,9 @@ if (import.meta.env.DEV) {
 
 createApp(App)
   .use(createPinia())
-  .use(PrimeVue, { theme: { preset: primePreset, options: { darkModeSelector: 'none' } } })
+  .use(PrimeVue, {
+    theme: { preset: primePreset, options: { darkModeSelector: 'none' } },
+    license: import.meta.env.VITE_PRIMEUI_LICENSE,
+  })
   .use(ToastService)
   .mount('#app')

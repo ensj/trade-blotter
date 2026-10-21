@@ -39,6 +39,8 @@ npm run dev     # http://localhost:5173; proxies /trades and /positions to the b
 npm run build
 ```
 
+- **PrimeUI license.** PrimeVue 5 shows an "Invalid PrimeUI License" badge and logs a console warning without a license key. Get a key (free Community or commercial) from [primeui.dev](https://primeui.dev/licenses) and set `VITE_PRIMEUI_LICENSE` in the environment or in `frontend/.env.local` (gitignored).
+
 ### API contract
 
 - `docs/openapi.json`: the OpenAPI document exported from Swashbuckle. A backend test fails if it drifts from the running app; regenerate it with `UPDATE_OPENAPI=1 dotnet test backend`.
