@@ -4,19 +4,20 @@ using Microsoft.OpenApi.Models;
 using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Positions;
 using TradeBlotter.Api.Features.Trades;
-using TradeBlotter.Api.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder
     .Services.AddControllers()
     .AddJsonOptions(o =>
+    {
         o.JsonSerializerOptions.Converters.Add(
             new JsonStringEnumConverter(allowIntegerValues: false)
-        )
-    );
+        );
+        // The contract sends money as JSON numbers; reject "100" instead of coercing it.
+        o.JsonSerializerOptions.NumberHandling = JsonNumberHandling.Strict;
+    });
 builder.Services.AddProblemDetails();
-builder.Services.AddExceptionHandler<NotImplementedExceptionHandler>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {
@@ -36,6 +37,7 @@ builder.Services.AddSwaggerGen(o =>
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlite(builder.Configuration.GetConnectionString("TradeBlotter"))
 );
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<TradeService>();
 builder.Services.AddScoped<PositionService>();
 

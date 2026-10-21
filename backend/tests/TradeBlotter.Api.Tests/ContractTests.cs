@@ -34,19 +34,6 @@ public class ContractTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    [Fact]
-    public async Task Post_valid_trade_returns_501_problem_details_until_implemented()
-    {
-        var response = await client.PostAsync(
-            "/trades",
-            Json(Example("create-trade-request.json"))
-        );
-
-        Assert.Equal(HttpStatusCode.NotImplemented, response.StatusCode);
-        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        Assert.Equal(501, problem?.Status);
-    }
-
     [Theory]
     [InlineData("""{ "side": "Buy", "quantity": 1, "price": 1 }""", "Symbol")]
     [InlineData("""{ "symbol": "AAPL", "quantity": 1, "price": 1 }""", "Side")]
