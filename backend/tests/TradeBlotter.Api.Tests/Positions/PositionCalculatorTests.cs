@@ -100,7 +100,7 @@ public class PositionCalculatorTests
         Assert.Equal([new("AAPL", 10, 30)], PositionCalculator.Calculate(trades));
     }
 
-    private static IReadOnlyList<PositionResponse> Calculate(string trades) =>
+    private static IReadOnlyList<Position> Calculate(string trades) =>
         PositionCalculator.Calculate(
             trades
                 .Split(", ")

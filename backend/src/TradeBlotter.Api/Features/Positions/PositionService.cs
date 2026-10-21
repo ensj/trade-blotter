@@ -14,16 +14,11 @@ public sealed class PositionService(AppDbContext db)
         var trades = await db.Trades.AsNoTracking().ToListAsync(ct);
         return PositionCalculator
             .Calculate(trades)
-            .Select(p =>
-                p with
-                {
-                    AverageCost = Math.Round(
-                        p.AverageCost,
-                        AverageCostDecimals,
-                        MidpointRounding.AwayFromZero
-                    ),
-                }
-            )
+            .Select(p => new PositionResponse(
+                p.Symbol,
+                p.NetQuantity,
+                Math.Round(p.AverageCost, AverageCostDecimals, MidpointRounding.AwayFromZero)
+            ))
             .ToList();
     }
 }
