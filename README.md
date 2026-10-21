@@ -60,7 +60,6 @@ npm run dev:mock  # same, but serves /trades and /positions from an in-memory mo
 npm run build
 ```
 
-- **PrimeUI license.** PrimeVue 5 shows an "Invalid PrimeUI License" badge and logs a console warning without a license key. Get a key (free Community or commercial) from [primeui.dev](https://primeui.dev/licenses) and set `VITE_PRIMEUI_LICENSE` in the environment or in `frontend/.env.local` (gitignored).
 - **Layout.** `src/App.vue` is a CSS grid: toolbar row, blotter, positions panel beside it (stacked below 900px). The PrimeVue Aura preset uses a sky primary, and the AG Grid Quartz theme reads the same PrimeVue CSS variables (`src/theme.ts`). Dark mode is off.
 - **Code map.** `src/api/` holds stateless fetch calls (ProblemDetails → `ApiError`). `src/stores/` holds the Pinia `trades` and `positions` stores; a successful create re-fetches both. `src/lib/` has pure helpers: formatting, search matching, and validation that mirrors the server. `src/components/` holds the views.
 - **Search** matches symbol or side as a case-insensitive substring, through an AG Grid external filter.
@@ -107,6 +106,20 @@ cd frontend && npm run mutation           # Stryker.js on src/**/*.ts (no compon
 Both use cores − 1 for concurrency. Reports land in `backend/StrykerOutput/` and `frontend/reports/mutation/` (gitignored).
 
 ### End-to-end tests
+
+Playwright drives the real stack: the .NET API on 5080 and Vite on 5173 through its proxy (not the mock).
+
+```sh
+cd frontend
+npx playwright install chromium   # once
+npm run e2e                       # e2e/blotter.spec.ts; report in frontend/playwright-report/
+npm run e2e:screenshots           # e2e/screenshots.spec.ts; rewrites docs/screenshots/e2e-*.png
+```
+
+- `playwright.config.ts` starts both servers through `webServer` and fails if 5080 or 5173 is already in use, so a stale server or database is never reused. The backend gets a new SQLite file in the OS temp directory on every run, through `ConnectionStrings__TradeBlotter`.
+- The backend needs the .NET 8 SDK; the config runs it through `scripts/with-dotnet.sh`.
+- The tests run in declaration order on one worker and share that database. Each test uses its own symbols, and the first one checks the empty state.
+- The browser runs at 1440×900 with locale `en-US` and timezone `America/New_York`, so formatted numbers and times are deterministic.
 
 ## Assumptions and design decisions
 

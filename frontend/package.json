@@ -11,17 +11,19 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "mutation": "stryker run",
+    "e2e": "playwright test",
+    "e2e:screenshots": "E2E_SCREENSHOTS=1 playwright test",
     "lint": "biome check .",
     "knip": "knip",
     "dup": "cd .. && jscpd"
   },
   "dependencies": {
-    "@primeicons/vue": "^8.0.2",
-    "@primeuix/themes": "^3.0.1",
+    "@primeuix/themes": "^2.0.3",
+    "@primevue/icons": "^4.5.5",
     "ag-grid-community": "^36.2.0",
     "ag-grid-vue3": "^36.2.0",
     "pinia": "^4.1.0",
-    "primevue": "^5.0.2",
+    "primevue": "^4.5.5",
     "vue": "^3.5.44"
   },
   "devDependencies": {

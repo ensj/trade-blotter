@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PlusIcon from '@primeicons/vue/plus'
+import PlusIcon from '@primevue/icons/plus'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
@@ -48,7 +48,7 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
 <style scoped>
 .app {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22rem;
+  grid-template-columns: minmax(0, 1fr) clamp(17rem, 28vw, 22rem);
   grid-template-rows: auto minmax(0, 1fr);
   grid-template-areas:
     "toolbar toolbar"

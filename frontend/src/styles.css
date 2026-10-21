@@ -11,3 +11,34 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* A titled panel whose grid fills the remaining height. */
+.panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  min-height: 0;
+}
+
+.panel-heading {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--p-surface-500);
+}
+
+.empty-state {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  color: var(--p-surface-400);
+  font-size: 0.8125rem;
+}
+
+.empty-state strong {
+  color: var(--p-surface-600);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}

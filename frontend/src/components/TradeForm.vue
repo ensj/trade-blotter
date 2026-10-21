@@ -47,12 +47,14 @@ function submit() {
   <form class="trade-form" novalidate @submit.prevent="submit">
     <div class="field">
       <label for="trade-symbol">Symbol</label>
+      <!-- The Dialog focuses [autofocus] on open, else its close button; biome.json allows it here. -->
       <InputText
         id="trade-symbol"
         v-model="draft.symbol"
         class="symbol"
         maxlength="10"
         autocomplete="off"
+        autofocus
         :invalid="!!errors.symbol"
         fluid
       />

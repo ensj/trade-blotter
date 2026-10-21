@@ -5,7 +5,7 @@ import { shallowRef, watch } from 'vue'
 import type { Trade } from '../api/types'
 import { matchesSearch } from '../lib/tradeSearch'
 import { useTradesStore } from '../stores/trades'
-import { gridTheme } from '../theme'
+import { emptyState, gridTheme } from '../theme'
 import { blotterColumns, defaultColDef } from './blotterColumns'
 import SideCellRenderer from './SideCellRenderer.vue'
 
@@ -31,24 +31,20 @@ defineExpose({ SideCellRenderer })
 </script>
 
 <template>
-  <AgGridVue
-    class="grid"
-    :theme="gridTheme"
-    :row-data="store.trades"
-    :column-defs="blotterColumns"
-    :default-col-def="defaultColDef"
-    :get-row-id="getRowId"
-    :is-external-filter-present="isExternalFilterPresent"
-    :does-external-filter-pass="doesExternalFilterPass"
-    :loading="store.loading"
-    overlay-no-rows-template="No trades yet. Use + New trade to add one."
-    @grid-ready="onGridReady"
-  />
+  <section class="panel">
+    <h2 class="panel-heading">Trades</h2>
+    <AgGridVue
+      class="grid"
+      :theme="gridTheme"
+      :row-data="store.trades"
+      :column-defs="blotterColumns"
+      :default-col-def="defaultColDef"
+      :get-row-id="getRowId"
+      :is-external-filter-present="isExternalFilterPresent"
+      :does-external-filter-pass="doesExternalFilterPass"
+      :loading="store.loading"
+      :overlay-no-rows-template="emptyState('No trades yet', 'Use New trade to record one.')"
+      @grid-ready="onGridReady"
+    />
+  </section>
 </template>
-
-<style scoped>
-.grid {
-  height: 100%;
-  width: 100%;
-}
-</style>
