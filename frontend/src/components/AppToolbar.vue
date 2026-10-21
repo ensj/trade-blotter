@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SearchIcon from '@primeicons/vue/search'
+import SearchIcon from '@primevue/icons/search'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'

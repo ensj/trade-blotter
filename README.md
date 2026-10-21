@@ -61,7 +61,6 @@ npm run dev:mock  # same, but serves /trades and /positions from an in-memory mo
 npm run build
 ```
 
-- **PrimeUI license.** PrimeVue 5 shows an "Invalid PrimeUI License" badge and logs a console warning without a license key. Get a key (free Community or commercial) from [primeui.dev](https://primeui.dev/licenses) and set `VITE_PRIMEUI_LICENSE` in the environment or in `frontend/.env.local` (gitignored).
 - **Layout.** `src/App.vue` is a CSS grid: toolbar row, blotter, positions panel beside it (stacked below 900px). The PrimeVue Aura preset uses a sky primary, and the AG Grid Quartz theme reads the same PrimeVue CSS variables (`src/theme.ts`). Dark mode is off.
 - **Code map.** `src/api/` holds stateless fetch calls (ProblemDetails → `ApiError`). `src/stores/` holds the Pinia `trades` and `positions` stores; a successful create re-fetches both. `src/lib/` has pure helpers: formatting, search matching, and validation that mirrors the server. `src/components/` holds the views.
 - **Search** matches symbol or side as a case-insensitive substring, through an AG Grid external filter.

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PlusIcon from '@primeicons/vue/plus'
+import PlusIcon from '@primevue/icons/plus'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
