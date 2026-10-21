@@ -18,8 +18,8 @@
     "dup": "cd .. && jscpd"
   },
   "dependencies": {
+    "@primeuix/themes": "^2.0.3",
     "@primevue/icons": "^4.5.5",
-    "@primevue/themes": "^4.5.4",
     "ag-grid-community": "^36.2.0",
     "ag-grid-vue3": "^36.2.0",
     "pinia": "^4.1.0",
