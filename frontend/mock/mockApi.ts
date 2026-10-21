@@ -1,4 +1,4 @@
-// Dev-only stand-in for the .NET API, enabled with MOCK_API=1. Follows docs/openapi.json.
+// Dev-only stand-in for the .NET API, enabled with MOCK_API=1.
 import { randomUUID } from 'node:crypto'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
