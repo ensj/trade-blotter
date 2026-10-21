@@ -28,3 +28,17 @@ body {
   text-transform: uppercase;
   color: var(--p-surface-500);
 }
+
+.empty-state {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  color: var(--p-surface-400);
+  font-size: 0.8125rem;
+}
+
+.empty-state strong {
+  color: var(--p-surface-600);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}

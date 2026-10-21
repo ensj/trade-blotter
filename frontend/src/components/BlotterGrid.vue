@@ -5,7 +5,7 @@ import { shallowRef, watch } from 'vue'
 import type { Trade } from '../api/types'
 import { matchesSearch } from '../lib/tradeSearch'
 import { useTradesStore } from '../stores/trades'
-import { gridTheme } from '../theme'
+import { emptyState, gridTheme } from '../theme'
 import { blotterColumns, defaultColDef } from './blotterColumns'
 import SideCellRenderer from './SideCellRenderer.vue'
 
@@ -43,7 +43,7 @@ defineExpose({ SideCellRenderer })
       :is-external-filter-present="isExternalFilterPresent"
       :does-external-filter-pass="doesExternalFilterPass"
       :loading="store.loading"
-      overlay-no-rows-template="No trades yet. Use + New trade to add one."
+      :overlay-no-rows-template="emptyState('No trades yet', 'Use New trade to record one.')"
       @grid-ready="onGridReady"
     />
   </section>

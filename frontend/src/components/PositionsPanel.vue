@@ -3,7 +3,7 @@ import type { GetRowIdParams } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
 import type { Position } from '../api/types'
 import { usePositionsStore } from '../stores/positions'
-import { gridTheme } from '../theme'
+import { emptyState, gridTheme } from '../theme'
 import { positionColumns, positionDefaultColDef } from './positionColumns'
 
 const store = usePositionsStore()
@@ -22,7 +22,7 @@ const getRowId = (p: GetRowIdParams<Position>) => p.data.symbol
       :default-col-def="positionDefaultColDef"
       :get-row-id="getRowId"
       :loading="store.loading"
-      overlay-no-rows-template="No open positions"
+      :overlay-no-rows-template="emptyState('No open positions', 'Positions appear as you trade.')"
     />
   </section>
 </template>
