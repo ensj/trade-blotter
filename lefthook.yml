@@ -28,3 +28,6 @@ pre-push:
       run: npx --no knip
     jscpd:
       run: frontend/node_modules/.bin/jscpd
+    # Unfiltered: a backend-only push can change docs/openapi.json and leave the types stale.
+    api-types:
+      run: npm run --silent --prefix frontend check:api

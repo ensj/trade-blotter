@@ -7,6 +7,8 @@
     "dev": "vite",
     "dev:mock": "MOCK_API=1 vite",
     "build": "vue-tsc -b && vite build",
+    "gen:api": "openapi-typescript ../docs/openapi.json -o src/api/schema.d.ts",
+    "check:api": "openapi-typescript ../docs/openapi.json -o src/api/schema.d.ts --check",
     "preview": "vite preview",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
@@ -40,9 +42,15 @@
     "jsdom": "^29.1.1",
     "knip": "^6.42.1",
     "lefthook": "^2.2.2",
+    "openapi-typescript": "^7.13.0",
     "typescript": "~6.0.3",
     "vite": "^8.3.4",
     "vitest": "4.1.12",
     "vue-tsc": "^3.3.13"
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
   }
 }

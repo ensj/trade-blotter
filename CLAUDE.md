@@ -53,6 +53,7 @@ Parallel agents edit only their own sections of this file and `README.md`:
 
 <!-- Owned by the frontend agent. -->
 
+- API types are generated: `src/api/schema.d.ts` comes from `docs/openapi.json` via `npm run gen:api`; `src/api/types.ts` only aliases it. Regenerate after any contract change; pre-push fails if it is stale.
 - Pure logic lives in `src/lib/` and column defs in `src/components/*Columns.ts`, so they test without mounting a grid. Components stay thin.
 - Pass grid custom components to `cellRenderer` by reference (see `blotterColumns.ts`); ag-grid-vue3 accepts component objects.
 - AG Grid rows animate out after a filter or data change. Component tests wait about 600 ms before asserting that a row is gone.
