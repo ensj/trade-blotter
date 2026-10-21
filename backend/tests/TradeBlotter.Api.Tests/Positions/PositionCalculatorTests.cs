@@ -78,26 +78,28 @@ public class PositionCalculatorTests
     {
         var trades = new[]
         {
-            Trade("AAPL", Side.Buy, 10, 30, T0.AddSeconds(2), sequence: 1),
-            Trade("AAPL", Side.Sell, 100, 12, T0.AddSeconds(1), sequence: 2),
-            Trade("AAPL", Side.Buy, 100, 10, T0, sequence: 3),
+            Trade("AAPL", Side.Buy, 10, 30, T0.AddSeconds(2)),
+            Trade("AAPL", Side.Sell, 100, 12, T0.AddSeconds(1)),
+            Trade("AAPL", Side.Buy, 100, 10, T0),
         };
 
         Assert.Equal([new("AAPL", 10, 30)], PositionCalculator.Calculate(trades));
     }
 
     [Fact]
-    public void Timestamp_ties_are_applied_in_sequence_order()
+    public void Timestamp_ties_are_applied_in_id_order()
     {
         var trades = new[]
         {
-            Trade("AAPL", Side.Buy, 10, 30, T0, sequence: 3),
-            Trade("AAPL", Side.Sell, 100, 12, T0, sequence: 2),
-            Trade("AAPL", Side.Buy, 100, 10, T0, sequence: 1),
+            Trade("AAPL", Side.Buy, 10, 30, T0, id: Id(3)),
+            Trade("AAPL", Side.Sell, 100, 12, T0, id: Id(2)),
+            Trade("AAPL", Side.Buy, 100, 10, T0, id: Id(1)),
         };
 
         Assert.Equal([new("AAPL", 10, 30)], PositionCalculator.Calculate(trades));
     }
+
+    private static Guid Id(int n) => new($"00000000-0000-0000-0000-{n:D12}");
 
     private static IReadOnlyList<Position> Calculate(string trades) =>
         PositionCalculator.Calculate(
@@ -120,20 +122,17 @@ public class PositionCalculatorTests
                 .ToList()
         );
 
-    private static long nextSequence;
-
     private static Trade Trade(
         string symbol,
         Side side,
         decimal quantity,
         decimal price,
         DateTime? timestamp = null,
-        long? sequence = null
+        Guid? id = null
     ) =>
         new()
         {
-            Sequence = sequence ?? Interlocked.Increment(ref nextSequence),
-            Id = Guid.NewGuid(),
+            Id = id ?? Guid.NewGuid(),
             Symbol = symbol,
             Side = side,
             Quantity = quantity,

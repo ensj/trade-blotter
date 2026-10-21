@@ -19,11 +19,8 @@ namespace TradeBlotter.Api.Data.Migrations
 
             modelBuilder.Entity("TradeBlotter.Api.Data.Trade", b =>
                 {
-                    b.Property<long>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
@@ -45,10 +42,7 @@ namespace TradeBlotter.Api.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Sequence");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("Timestamp");
 

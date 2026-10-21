@@ -14,8 +14,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var trade = modelBuilder.Entity<Trade>();
-        trade.HasKey(t => t.Sequence);
-        trade.HasIndex(t => t.Id).IsUnique();
+        trade.HasKey(t => t.Id);
         trade.Property(t => t.Symbol).HasMaxLength(10);
         trade.Property(t => t.Side).HasConversion<string>().HasMaxLength(4);
         trade.HasIndex(t => t.Timestamp);

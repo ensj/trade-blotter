@@ -67,6 +67,7 @@ public sealed class TradesApiTests : IDisposable
         await Post("""{ "symbol": "A", "side": "Buy", "quantity": 1, "price": 1 }""");
         clock.Advance(TimeSpan.FromMinutes(1));
         await Post("""{ "symbol": "B", "side": "Buy", "quantity": 1, "price": 1 }""");
+        clock.Advance(TimeSpan.FromTicks(1));
         await Post("""{ "symbol": "C", "side": "Buy", "quantity": 1, "price": 1 }""");
 
         var trades = await client.GetFromJsonAsync<TradeResponse[]>("/trades", TestJson.Options);

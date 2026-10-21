@@ -8,7 +8,7 @@ public static class PositionCalculator
     public static IReadOnlyList<Position> Calculate(IEnumerable<Trade> trades)
     {
         var positions = new Dictionary<string, (decimal Net, decimal Avg)>();
-        foreach (var trade in trades.OrderBy(t => t.Timestamp).ThenBy(t => t.Sequence))
+        foreach (var trade in trades.OrderBy(t => t.Timestamp).ThenBy(t => t.Id))
         {
             var (net, avg) = positions.GetValueOrDefault(trade.Symbol);
             positions[trade.Symbol] = Apply(net, avg, trade);
