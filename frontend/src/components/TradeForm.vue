@@ -7,9 +7,9 @@ import SelectButton from 'primevue/selectbutton'
 import { reactive, ref, watch } from 'vue'
 import type { CreateTradeRequest } from '../api/types'
 import {
+  FIELDS,
   type FieldErrors,
   type TradeDraft,
-  type TradeField,
   toRequest,
   validateTrade,
 } from '../lib/tradeValidation'
@@ -28,7 +28,7 @@ watch(
 )
 
 // Editing a field clears its error until the next submit.
-for (const field of ['symbol', 'side', 'quantity', 'price'] as TradeField[]) {
+for (const field of FIELDS) {
   watch(
     () => draft[field],
     () => {

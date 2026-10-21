@@ -13,7 +13,7 @@ export interface TradeDraft {
 
 const SYMBOL = /^[A-Za-z0-9.-]{1,10}$/
 const MAX_AMOUNT = 1_000_000_000
-const FIELDS: TradeField[] = ['symbol', 'side', 'quantity', 'price']
+export const FIELDS: TradeField[] = ['symbol', 'side', 'quantity', 'price']
 
 function amountError(value: number | null, label: string): string | undefined {
   if (value === null || !Number.isFinite(value)) return `${label} is required`
