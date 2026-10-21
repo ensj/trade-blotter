@@ -96,8 +96,9 @@ npm run dev:mock  # serve /trades and /positions from an in-memory mock (fronten
 npm run build
 ```
 
-- **Layout.** `src/App.vue` is a CSS grid: toolbar row, blotter, positions panel beside it (stacked below 900px). The PrimeVue Aura preset uses a sky primary, and the AG Grid Quartz theme reads the same PrimeVue CSS variables (`src/theme.ts`). Dark mode is off.
+- **Layout.** `src/App.vue` is a CSS grid: toolbar row, blotter, positions panel beside it (stacked below 900px). The PrimeVue Aura preset uses a sky-700 primary (white button text passes WCAG AA), Buy/Sell use green-700/red-700, and the AG Grid Quartz theme reads the same PrimeVue CSS variables (`src/theme.ts`). Dark mode is off.
 - **Code map.** `src/api/` holds stateless fetch calls (ProblemDetails → `ApiError`). `src/stores/` holds the Pinia `trades` and `positions` stores; a successful create re-fetches both. `src/lib/` has pure helpers: formatting, search matching, and validation that mirrors the server. `src/components/` holds the views.
+- **Blotter columns.** Time, Symbol and Side have fixed widths; Qty, Price and Notional share the rest with tabular digits. Time shows `HH:mm:ss` for today and `dd MMM HH:mm:ss` for older trades, with the full date on hover; sorting uses the raw timestamp.
 - **Search** matches symbol or side as a case-insensitive substring, through an AG Grid external filter.
 - **Mutation score** (Stryker.js on `src/**/*.ts` except components, tests and `main.ts`, 2026-10-20): **96.53%** (167 killed, 6 survived). `src/lib` 99.11%, `src/api` 94.44%, `src/stores` 88.00%. Survivors: an equivalent `value === null` guard in `tradeValidation.ts` (`Number.isFinite(null)` is already false); in `src/stores/resource.ts`, `++latest → --latest` (equivalent) and two stale-response guards with no test for an older failing request finishing after a newer one; in `src/api/http.ts`, the `ApiError` name and the fallback problem body.
 - **Vitest is pinned to 4.1.12.** `@stryker-mutator/vitest-runner` filters tests by name in a way Vitest 5 doesn't match for tests nested in `describe`, so under Vitest 5 those tests never ran against mutants and the score was understated.
