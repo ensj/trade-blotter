@@ -108,6 +108,20 @@ Both use cores − 1 for concurrency. Reports land in `backend/StrykerOutput/` a
 
 ### End-to-end tests
 
+Playwright drives the real stack: the .NET API on 5080 and Vite on 5173 through its proxy (not the mock).
+
+```sh
+cd frontend
+npx playwright install chromium   # once
+npm run e2e                       # e2e/blotter.spec.ts; report in frontend/playwright-report/
+npm run e2e:screenshots           # e2e/screenshots.spec.ts; rewrites docs/screenshots/e2e-*.png
+```
+
+- `playwright.config.ts` starts both servers through `webServer` and fails if 5080 or 5173 is already in use, so a stale server or database is never reused. The backend gets a new SQLite file in the OS temp directory on every run, through `ConnectionStrings__TradeBlotter`.
+- The backend needs the .NET 8 SDK; the config runs it through `scripts/with-dotnet.sh`.
+- The tests run in declaration order on one worker and share that database. Each test uses its own symbols, and the first one checks the empty state.
+- The browser runs at 1440×900 with locale `en-US` and timezone `America/New_York`, so formatted numbers and times are deterministic.
+
 ## Assumptions and design decisions
 
 ## What's next
