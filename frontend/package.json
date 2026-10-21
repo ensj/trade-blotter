@@ -15,6 +15,7 @@
     "dup": "cd .. && jscpd"
   },
   "dependencies": {
+    "@primeicons/vue": "^8.0.2",
     "@primeuix/themes": "^3.0.1",
     "ag-grid-community": "^36.2.0",
     "ag-grid-vue3": "^36.2.0",

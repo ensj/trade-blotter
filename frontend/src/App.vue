@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import AppToolbar from './components/AppToolbar.vue'
 import BlotterGrid from './components/BlotterGrid.vue'
 import { usePositionsStore } from './stores/positions'
 import { useTradesStore } from './stores/trades'
 
 const trades = useTradesStore()
 const positions = usePositionsStore()
+const search = ref('')
 
 onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
 </script>
 
 <template>
   <div class="app">
-    <header class="toolbar">
-      <h1 class="title">Trade Blotter</h1>
-    </header>
+    <AppToolbar v-model:search="search" class="toolbar" />
     <main class="blotter" aria-label="Trades">
-      <BlotterGrid />
+      <BlotterGrid :search="search" />
     </main>
     <aside class="positions" aria-label="Positions"></aside>
   </div>
@@ -37,17 +37,6 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
 
 .toolbar {
   grid-area: toolbar;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 1rem;
-}
-
-.title {
-  margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--p-surface-800);
 }
 
 .blotter {
