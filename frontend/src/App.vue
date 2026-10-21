@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast'
 import { onMounted, ref, watch } from 'vue'
 import AppToolbar from './components/AppToolbar.vue'
 import BlotterGrid from './components/BlotterGrid.vue'
+import PositionsPanel from './components/PositionsPanel.vue'
 import TradeEntryModal from './components/TradeEntryModal.vue'
 import { usePositionsStore } from './stores/positions'
 import { useTradesStore } from './stores/trades'
@@ -36,7 +37,9 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
     <main class="blotter" aria-label="Trades">
       <BlotterGrid :search="search" />
     </main>
-    <aside class="positions" aria-label="Positions"></aside>
+    <aside class="positions" aria-label="Positions">
+      <PositionsPanel />
+    </aside>
     <TradeEntryModal v-model:visible="entryOpen" />
     <Toast position="bottom-right" />
   </div>
