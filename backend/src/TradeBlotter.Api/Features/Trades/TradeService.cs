@@ -26,7 +26,7 @@ public sealed class TradeService(AppDbContext db, TimeProvider clock)
         await db
             .Trades.AsNoTracking()
             .OrderByDescending(t => t.Timestamp)
-            .ThenByDescending(t => t.Sequence)
+            .ThenByDescending(t => t.Id)
             .Select(t => ToResponse(t))
             .ToListAsync(ct);
 

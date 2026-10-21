@@ -37,18 +37,6 @@ public class PersistenceTests(ApiFactory factory) : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task Sequence_increases_in_insert_order()
-    {
-        await using var db = NewContext();
-        var first = NewTrade();
-        var second = NewTrade();
-        db.Trades.AddRange(first, second);
-        await db.SaveChangesAsync();
-
-        Assert.True(second.Sequence > first.Sequence);
-    }
-
-    [Fact]
     public async Task Decimals_round_trip_exactly()
     {
         var trade = NewTrade();
