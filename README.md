@@ -1,27 +1,66 @@
 # Trade Blotter
 
-A trade blotter: enter trades, see them in a live grid, and see positions derived from trade history. .NET 8 API + Vue 3 frontend.
+Enter trades, see them in a sortable, searchable blotter, and see positions derived from trade history. .NET 8 Web API + SQLite, Vue 3 + Pinia + PrimeVue + AG Grid Community.
 
-Design: [`docs/superpowers/specs/2026-10-19-trade-blotter-design.md`](docs/superpowers/specs/2026-10-19-trade-blotter-design.md).
+![Blotter with trades and positions](docs/screenshots/e2e-trades.png)
 
-## Setup
+## Run locally
 
-### Prerequisites
+Prerequisites: .NET 8 SDK and Node 24. `global.json` pins `8.0.x`; if `dotnet --version` shows another major version, put .NET 8 first: `export DOTNET_ROOT=$HOME/.dotnet PATH=$HOME/.dotnet:$PATH`.
 
-- .NET 8 SDK. `global.json` pins `8.0.x` with `rollForward: latestFeature`. If `dotnet` resolves to another SDK, put the right one first: `export DOTNET_ROOT=$HOME/.dotnet PATH=$HOME/.dotnet:$PATH`.
-- Node 24.
+```sh
+# terminal 1: API on http://localhost:5080 (Swagger at /swagger); creates the SQLite DB on first run
+cd backend && dotnet run --project src/TradeBlotter.Api
+
+# terminal 2: app on http://localhost:5173 (proxies /trades and /positions to 5080)
+cd frontend && npm install && npm run dev
+```
+
+Tests: `cd backend && dotnet test`, `cd frontend && npm test`, and `cd frontend && npx playwright install chromium && npm run e2e` for the full-stack suite.
+
+## API
+
+| Endpoint | Success | Errors |
+|---|---|---|
+| `POST /trades` `{symbol, side, quantity, price}` | `201` + `Location`, the created trade | `400` ValidationProblemDetails, `415` non-JSON |
+| `GET /trades` | `200`, all trades, newest first | |
+| `GET /trades/{id}` | `200` | `404` |
+| `GET /positions` | `200`, `{symbol, netQuantity, averageCost}` by symbol, zero positions omitted | |
+
+Unexpected failures return `500` ProblemDetails without exception detail. Contract: `docs/openapi.json`, examples in `docs/examples/`.
+
+## Assumptions and design decisions
+
+- **Money is `decimal`, not `double`.** Exact arithmetic means a closed position nets to exactly zero, so "omit zero positions" needs no epsilon. Quantity and price must be > 0, at most 1,000,000,000, with at most 4 decimal places; fractional shares are allowed.
+- **Average-cost method.** Per symbol, in trade order: adding to a position re-weights the average; reducing it keeps the average; closing to zero drops it; crossing zero (long to short or back) opens the new position at that trade's price. Shorts are negative net quantities. The calculator is a pure function (`Features/Positions/PositionCalculator.cs`) covered by the design's worked examples and mutation-tested. `averageCost` is rounded to 6 decimal places in the response so it survives JavaScript number parsing.
+- **Positions are derived on every request**, never stored. At this scale an in-memory fold over all trades is simpler than maintaining a positions table and can't drift from the trade history.
+- **The server owns time.** `POST /trades` takes no timestamp; the server stamps UTC on insert (a client-sent `timestamp` is ignored). The browser shows times in its local timezone. Equal timestamps are ordered by an internal insertion sequence.
+- **Symbols** are trimmed and upper-cased; 1–10 characters of `A-Z 0-9 . -` (e.g. `BRK.B`).
+- **Side is Buy or Sell only.** Short selling is a Sell that takes the position negative; no separate short/cover types.
+- **No users or auth.** Out of scope per the exercise; there is no per-user data.
+- **No pagination.** `GET /trades` returns everything and the grid sorts and filters client-side. Server-side paging with client-side sort/filter raises consistency questions between fetches that this scope doesn't need.
+- **Refresh after submit, not push.** After a successful POST, the Pinia stores re-fetch trades and positions from the server, which keeps the server the single source of truth (no optimistic merge, no ordering races).
+- **Trade entry is a modal** behind a "New trade" button in the toolbar, so the blotter and positions keep the full page. The form validates the same rules as the server and maps server errors back onto fields.
+- **AG Grid Community only.** Side colouring is a custom cell renderer; search is an external filter on symbol and side. Multi-cell paste is Enterprise-only, so bulk entry was dropped.
+- **PrimeVue 4** (MIT). PrimeVue 5 shows a license badge without a registered key.
+
+## What's next
+
+- Live updates across clients (SSE or SignalR) instead of refresh-after-own-submit.
+- Server-side paging with a `since` cursor once trade volume makes returning everything slow.
+- Realised and unrealised P&L, which needs market prices.
+- Authentication and per-user books.
+- Bulk entry (CSV upload or a paste parser), amend/cancel of trades with an audit trail.
+- A CI workflow running tests, lint, e2e and mutation testing on pull requests.
+
+## Development
 
 ### Claude Code MCP servers and skills
 
 - `.mcp.json` registers three project MCP servers, run through `npx`: AG Grid (`ag-mcp`), PrimeVue (`@primevue/mcp`) and Playwright (`@playwright/mcp`). Claude Code asks you to approve them on first use.
 - `.claude/skills/` holds the vendors' official skills, copied from [`ag-grid/skills`](https://github.com/ag-grid/skills) (`ag-dev`, `ag-update`) and [`primefaces/primeui-plugins`](https://github.com/primefaces/primeui-plugins/tree/main/plugins/primevue/skills) (`primevue-*`; these call the PrimeVue MCP tools). To update them, re-copy from those repos.
 
-### Backend
-
-```sh
-cd backend
-dotnet run --project src/TradeBlotter.Api   # http://localhost:5080, Swagger at /swagger
-```
+### Backend notes
 
 SQLite via EF Core 8. Migrations in `src/TradeBlotter.Api/Data/Migrations/` are applied on startup. The database file defaults to `src/TradeBlotter.Api/trade-blotter.db` (gitignored); override it with `ConnectionStrings__TradeBlotter="Data Source=/path/to/file.db"`.
 
@@ -50,13 +89,10 @@ Remaining survivor:
 
 - `PositionCalculator`: `q <= held` → `q < held`. Equivalent. When a trade closes the position to exactly zero, the mutant keeps the trade price as the average instead of the old one, but a zero position is omitted and the next trade starts fresh because `held` is 0, so no output changes.
 
-### Frontend
+### Frontend notes
 
 ```sh
-cd frontend
-npm install
-npm run dev     # http://localhost:5173; proxies /trades and /positions to the backend on 5080
-npm run dev:mock  # same, but serves /trades and /positions from an in-memory mock (frontend/mock/), no backend
+npm run dev:mock  # serve /trades and /positions from an in-memory mock (frontend/mock/), no backend
 npm run build
 ```
 
@@ -121,6 +157,6 @@ npm run e2e:screenshots           # e2e/screenshots.spec.ts; rewrites docs/scree
 - The tests run in declaration order on one worker and share that database. Each test uses its own symbols, and the first one checks the empty state.
 - The browser runs at 1440×900 with locale `en-US` and timezone `America/New_York`, so formatted numbers and times are deterministic.
 
-## Assumptions and design decisions
+## How this was built
 
-## What's next
+Built with Claude Code. A coordinator session wrote the design (`docs/superpowers/specs/`) and per-agent briefs (`docs/briefs/`), then ran agents in parallel in separate git worktrees through herdr (a terminal multiplexer for coding agents): Part 1 skeleton, Part 2 backend and frontend side by side, Part 3 e2e/UI and backend polish side by side, then review fixes. Read-only review subagents audited the result against the exercise, the design and the architecture. Full transcripts are in [`transcripts/`](transcripts/).
