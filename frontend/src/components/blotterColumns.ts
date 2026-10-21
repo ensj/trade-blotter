@@ -2,6 +2,7 @@ import type { ColDef } from 'ag-grid-community'
 import type { Trade } from '../api/types'
 import { formatMoney, formatPrice, formatQuantity, formatTimestamp } from '../lib/format'
 import { notional } from '../lib/notional'
+import { compareTimestamps } from '../lib/timestamp'
 import SideCellRenderer from './SideCellRenderer.vue'
 
 export const blotterColumns: ColDef<Trade>[] = [
@@ -10,6 +11,7 @@ export const blotterColumns: ColDef<Trade>[] = [
     headerName: 'Time',
     cellDataType: 'text',
     sort: 'desc',
+    comparator: compareTimestamps,
     valueFormatter: (p) => (p.value ? formatTimestamp(p.value) : ''),
     minWidth: 170,
   },
