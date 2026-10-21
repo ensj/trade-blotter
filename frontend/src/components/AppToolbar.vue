@@ -23,7 +23,9 @@ const search = defineModel<string>('search', { required: true })
         fluid
       />
     </IconField>
-    <slot name="actions" />
+    <div class="actions">
+      <slot name="actions" />
+    </div>
   </header>
 </template>
 
@@ -46,5 +48,12 @@ const search = defineModel<string>('search', { required: true })
 
 .search {
   grid-area: search;
+}
+
+.actions {
+  grid-area: actions;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.5rem;
 }
 </style>
