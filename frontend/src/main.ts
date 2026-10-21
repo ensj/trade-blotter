@@ -1,6 +1,7 @@
 import { AllCommunityModule, enableDevValidations, ModuleRegistry } from 'ag-grid-community'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { primePreset } from './theme'
@@ -14,4 +15,5 @@ if (import.meta.env.DEV) {
 createApp(App)
   .use(createPinia())
   .use(PrimeVue, { theme: { preset: primePreset, options: { darkModeSelector: 'none' } } })
+  .use(ToastService)
   .mount('#app')
