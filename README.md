@@ -30,6 +30,14 @@ dotnet tool restore
 dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data/Migrations
 ```
 
+Backend behavior worth knowing:
+
+- Validation lives in `Features/Trades/TradeValidator`, run by MVC through `CreateTradeRequest : IValidatableObject`, so every 400 has the same ValidationProblemDetails shape. `[Required]` reports missing fields; the validator checks values only once they are present.
+- Money must be a JSON number. `"quantity": "100"` is a 400, not coerced.
+- SQLite stores decimals as TEXT and reads `100` back as `100.0`, so responses may carry a trailing `.0`. The value is identical.
+- 500s are ProblemDetails with no exception detail outside Development.
+- Stryker needs the .NET 8 SDK on PATH: `scripts/with-dotnet.sh scripts/mutation-backend.sh`.
+
 Mutation score (Stryker.NET 4.16.0, `Features/**`, 2026-10-20): **97.92%**, 47 killed, 1 survived, 0 timeouts. 13 mutants did not compile and 4 were skipped as already covered; neither counts.
 
 | File | Killed | Survived |

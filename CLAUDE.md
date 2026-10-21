@@ -44,6 +44,11 @@ Parallel agents edit only their own sections of this file and `README.md`:
 
 <!-- Owned by the backend agent. -->
 
+- Trade validation goes in `Features/Trades/TradeValidator` (runs via `IValidatableObject`), not in controllers or attributes that change `docs/openapi.json`.
+- Inject `TimeProvider`; tests use `FakeTimeProvider`. Never call `DateTime.UtcNow` in features.
+- `PositionCalculator` stays pure and unrounded; rounding to 6 places happens in `PositionService`.
+- Integration tests that write data get their own `ApiFactory`; `ContractTests` assumes an empty DB.
+
 ## Frontend
 
 <!-- Owned by the frontend agent. -->
