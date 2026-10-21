@@ -68,11 +68,11 @@ public class TradeValidatorTests
     }
 
     [Fact]
-    public void Errors_carry_a_message()
+    public void Errors_carry_a_message_naming_the_field()
     {
-        var error = Assert.Single(TradeValidator.Validate(Request(price: 0m)));
+        var errors = TradeValidator.Validate(Request(symbol: "!", quantity: 0m, price: 0m));
 
-        Assert.False(string.IsNullOrWhiteSpace(error.ErrorMessage));
+        Assert.All(errors, e => Assert.StartsWith(e.MemberNames.Single(), e.ErrorMessage));
     }
 
     [Fact]

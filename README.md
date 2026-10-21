@@ -30,6 +30,19 @@ dotnet tool restore
 dotnet ef migrations add <Name> --project src/TradeBlotter.Api --output-dir Data/Migrations
 ```
 
+Mutation score (Stryker.NET 4.16.0, `Features/**`, 2026-10-20): **97.92%**, 47 killed, 1 survived, 0 timeouts. 13 mutants did not compile and 4 were skipped as already covered; neither counts.
+
+| File | Killed | Survived |
+|---|---|---|
+| `Positions/PositionCalculator.cs` | 22 | 1 |
+| `Positions/PositionService.cs` | 1 | 0 |
+| `Trades/TradeService.cs` | 5 | 0 |
+| `Trades/TradeValidator.cs` | 19 | 0 |
+
+Remaining survivor:
+
+- `PositionCalculator`: `q <= held` → `q < held`. Equivalent. When a trade closes the position to exactly zero, the mutant keeps the trade price as the average instead of the old one, but a zero position is omitted and the next trade starts fresh because `held` is 0, so no output changes.
+
 ### Frontend
 
 ```sh

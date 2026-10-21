@@ -31,10 +31,8 @@ public static class PositionCalculator
 
         if (net == 0 || Math.Sign(net) == Math.Sign(signed))
             return (newNet, (held * avg + q * trade.Price) / (held + q));
-        if (q < held)
-            return (newNet, avg);
-        if (q == held)
-            return (0, 0);
-        return (newNet, trade.Price);
+        // Reducing keeps the average; flipping through zero opens at this trade's price.
+        // Closing to exactly zero keeps a stale average, which the next trade ignores because held is 0.
+        return (newNet, q <= held ? avg : trade.Price);
     }
 }
