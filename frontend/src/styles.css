@@ -42,3 +42,8 @@ body {
   font-size: 0.9375rem;
   font-weight: 600;
 }
+
+/* Equal-width digits keep prices and times aligned down a column. */
+.ag-cell {
+  font-variant-numeric: tabular-nums;
+}
