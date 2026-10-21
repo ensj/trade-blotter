@@ -8,3 +8,16 @@ test('maps every primary shade to the sky palette', () => {
   expect(primary['500']).toBe('{sky.500}')
   expect(primary['950']).toBe('{sky.950}')
 })
+
+test('uses a primary shade dark enough for white button text (WCAG AA)', () => {
+  const light = (
+    primePreset as {
+      semantic: { colorScheme: { light: { primary: Record<string, string> } } }
+    }
+  ).semantic.colorScheme.light.primary
+  expect(light).toMatchObject({
+    color: '{primary.700}',
+    hoverColor: '{primary.800}',
+    activeColor: '{primary.900}',
+  })
+})

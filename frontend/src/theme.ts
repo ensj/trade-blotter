@@ -10,13 +10,25 @@ const palette = (name: string) =>
     ]),
   )
 
+// White on sky-500 is 2.8:1 and on sky-600 4.1:1; sky-700 (5.9:1) clears WCAG AA for button text.
 export const primePreset = definePreset(Aura, {
-  semantic: { primary: palette('sky') },
+  semantic: {
+    primary: palette('sky'),
+    colorScheme: {
+      light: {
+        primary: {
+          color: '{primary.700}',
+          hoverColor: '{primary.800}',
+          activeColor: '{primary.900}',
+        },
+      },
+    },
+  },
 })
 
 // The grid reads PrimeVue's CSS variables so both libraries share one palette.
 export const gridTheme = themeQuartz.withParams({
-  accentColor: 'var(--p-primary-500)',
+  accentColor: 'var(--p-primary-color)',
   backgroundColor: 'var(--p-surface-0)',
   foregroundColor: 'var(--p-surface-700)',
   borderColor: 'var(--p-surface-200)',
