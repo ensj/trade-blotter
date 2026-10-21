@@ -48,7 +48,7 @@ onMounted(() => Promise.all([trades.fetchTrades(), positions.fetchPositions()]))
 <style scoped>
 .app {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22rem;
+  grid-template-columns: minmax(0, 1fr) clamp(17rem, 28vw, 22rem);
   grid-template-rows: auto minmax(0, 1fr);
   grid-template-areas:
     "toolbar toolbar"
