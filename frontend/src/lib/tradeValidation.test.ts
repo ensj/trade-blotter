@@ -73,14 +73,14 @@ test('toRequest refuses an incomplete draft', () => {
 })
 
 describe('mapProblemErrors', () => {
-  test('maps PascalCase, camelCase and JSON-path keys onto fields', () => {
+  test('maps camelCase keys onto fields', () => {
     expect(
       mapProblemErrors({
         errors: {
-          Symbol: ['The Symbol field is required.'],
+          symbol: ['The Symbol field is required.'],
           quantity: ['Must be positive.', 'Too many decimals.'],
-          '$.price': ['Invalid number.'],
-          side: ['Unknown side.'],
+          price: ['Invalid number.'],
+          side: ['Side must be Buy or Sell.'],
         },
       }),
     ).toEqual({
@@ -88,9 +88,16 @@ describe('mapProblemErrors', () => {
         symbol: 'The Symbol field is required.',
         quantity: 'Must be positive. Too many decimals.',
         price: 'Invalid number.',
-        side: 'Unknown side.',
+        side: 'Side must be Buy or Sell.',
       },
       other: [],
+    })
+  })
+
+  test('treats keys that are not exact field names as form-level messages', () => {
+    expect(mapProblemErrors({ errors: { Symbol: ['Pascal.'], '$.price': ['Path.'] } })).toEqual({
+      fields: {},
+      other: ['Pascal.', 'Path.'],
     })
   })
 

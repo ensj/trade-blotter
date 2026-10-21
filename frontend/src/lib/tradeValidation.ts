@@ -48,10 +48,8 @@ export function toRequest(draft: TradeDraft): CreateTradeRequest {
   }
 }
 
-// The API keys validation errors by camelCase field name ("symbol"); older shapes used "Symbol" or "$.quantity".
 function fieldFor(key: string): TradeField | undefined {
-  const name = key.replace(/^\$\./, '').toLowerCase()
-  return FIELDS.find((field) => field === name)
+  return FIELDS.find((field) => field === key)
 }
 
 export function mapProblemErrors(problem: ProblemDetails): {

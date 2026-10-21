@@ -54,7 +54,7 @@ test('closes and toasts after a successful create', async () => {
 test('maps a 400 ProblemDetails onto fields and form messages', async () => {
   stubFetch(
     jsonResponse(
-      { status: 400, errors: { Symbol: ['Unknown symbol.'], request: ['Bad body.'] } },
+      { status: 400, errors: { symbol: ['Unknown symbol.'], request: ['Bad body.'] } },
       400,
     ),
   )
