@@ -8,6 +8,7 @@ import { addTrade, blotter, columnValues, openEntry } from './blotter'
 const shot = (page: Page, name: string) =>
   page.screenshot({
     path: fileURLToPath(new URL(`../../docs/screenshots/e2e-${name}.png`, import.meta.url)),
+    animations: 'disabled',
   })
 
 const noToasts = (page: Page) => expect(page.locator('.p-toast-message')).toHaveCount(0)
