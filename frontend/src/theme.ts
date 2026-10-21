@@ -39,6 +39,6 @@ export const gridTheme = themeQuartz.withParams({
   fontSize: 13,
   headerFontWeight: 600,
   borderRadius: 8,
-  wrapperBorderRadius: 12,
+  wrapperBorderRadius: 8,
   spacing: 7,
 })
