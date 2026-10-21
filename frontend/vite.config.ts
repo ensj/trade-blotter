@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config'
 import { mockApi } from './mock/mockApi.ts'
 
 const useMock = process.env.MOCK_API === '1'
+const apiTarget = `http://localhost:${process.env.API_PORT ?? '5080'}`
 
 export default defineConfig({
   plugins: [vue(), ...(useMock ? [mockApi()] : [])],
@@ -12,8 +13,8 @@ export default defineConfig({
     proxy: useMock
       ? undefined
       : {
-          '/trades': 'http://localhost:5080',
-          '/positions': 'http://localhost:5080',
+          '/trades': apiTarget,
+          '/positions': apiTarget,
         },
   },
   test: {

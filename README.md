@@ -149,7 +149,8 @@ npm run e2e                       # e2e/blotter.spec.ts; report in frontend/play
 npm run e2e:screenshots           # e2e/screenshots.spec.ts; rewrites docs/screenshots/e2e-*.png
 ```
 
-- `playwright.config.ts` starts both servers through `webServer` and fails if 5080 or 5173 is already in use, so a stale server or database is never reused. The backend gets a new SQLite file in the OS temp directory on every run, through `ConnectionStrings__TradeBlotter`.
+- `playwright.config.ts` starts both servers through `webServer` and fails if its ports (5080 and 5173 by default) are already in use, so a stale server or database is never reused. The backend gets a new SQLite file in the OS temp directory on every run, through `ConnectionStrings__TradeBlotter`.
+- To run beside a dev server, pick other ports: `E2E_API_PORT=5180 E2E_WEB_PORT=5183 npm run e2e`. The config passes the API port to Vite as `API_PORT`, which sets the proxy target (default 5080).
 - The backend needs the .NET 8 SDK; the config runs it through `scripts/with-dotnet.sh`.
 - The tests run in declaration order on one worker and share that database. Each test uses its own symbols, and the first one checks the empty state.
 - The browser runs at 1440×900 with locale `en-US` and timezone `America/New_York`, so formatted numbers and times are deterministic.
