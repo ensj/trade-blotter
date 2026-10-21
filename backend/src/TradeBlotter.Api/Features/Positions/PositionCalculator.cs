@@ -2,7 +2,7 @@ using TradeBlotter.Api.Data;
 
 namespace TradeBlotter.Api.Features.Positions;
 
-// Average-cost positions, unrounded. Rules: docs/superpowers/specs/2026-10-19-trade-blotter-design.md.
+// Average-cost positions, unrounded.
 public static class PositionCalculator
 {
     public static IReadOnlyList<Position> Calculate(IEnumerable<Trade> trades)

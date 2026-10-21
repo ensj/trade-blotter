@@ -7,7 +7,7 @@ public class PositionCalculatorTests
 {
     private static readonly DateTime T0 = new(2026, 10, 19, 14, 0, 0, DateTimeKind.Utc);
 
-    // The worked examples from the design, one trade string per row: "B 100@10" is Buy 100 at 10.
+    // One trade string per row: "B 100@10" is Buy 100 at 10.
     [Theory]
     [InlineData("B 100@10, B 100@20", 200, 15)]
     [InlineData("B 100@10, S 40@50", 60, 10)]
