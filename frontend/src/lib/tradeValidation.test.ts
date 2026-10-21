@@ -67,20 +67,20 @@ test('toRequest trims and upper-cases the symbol', () => {
 })
 
 test('toRequest refuses an incomplete draft', () => {
-  expect(() => toRequest({ ...valid, side: null })).toThrow()
-  expect(() => toRequest({ ...valid, quantity: null })).toThrow()
-  expect(() => toRequest({ ...valid, price: null })).toThrow()
+  expect(() => toRequest({ ...valid, side: null })).toThrow('toRequest needs a validated draft')
+  expect(() => toRequest({ ...valid, quantity: null })).toThrow('toRequest needs a validated draft')
+  expect(() => toRequest({ ...valid, price: null })).toThrow('toRequest needs a validated draft')
 })
 
 describe('mapProblemErrors', () => {
-  test('maps PascalCase, camelCase and JSON-path keys onto fields', () => {
+  test('maps camelCase keys onto fields', () => {
     expect(
       mapProblemErrors({
         errors: {
-          Symbol: ['The Symbol field is required.'],
+          symbol: ['The Symbol field is required.'],
           quantity: ['Must be positive.', 'Too many decimals.'],
-          '$.price': ['Invalid number.'],
-          side: ['Unknown side.'],
+          price: ['Invalid number.'],
+          side: ['Side must be Buy or Sell.'],
         },
       }),
     ).toEqual({
@@ -88,9 +88,16 @@ describe('mapProblemErrors', () => {
         symbol: 'The Symbol field is required.',
         quantity: 'Must be positive. Too many decimals.',
         price: 'Invalid number.',
-        side: 'Unknown side.',
+        side: 'Side must be Buy or Sell.',
       },
       other: [],
+    })
+  })
+
+  test('treats keys that are not exact field names as form-level messages', () => {
+    expect(mapProblemErrors({ errors: { Symbol: ['Pascal.'], '$.price': ['Path.'] } })).toEqual({
+      fields: {},
+      other: ['Pascal.', 'Path.'],
     })
   })
 

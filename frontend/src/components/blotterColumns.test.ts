@@ -1,7 +1,9 @@
 import type { ColDef, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community'
 import { expect, test } from 'vitest'
 import type { Trade } from '../api/types'
+import { compareTimestamps } from '../lib/timestamp'
 import { blotterColumns, defaultColDef } from './blotterColumns'
+import SideCellRenderer from './SideCellRenderer.vue'
 
 const trade: Trade = {
   id: '1',
@@ -40,6 +42,10 @@ test('sorts newest first by default and every column is sortable', () => {
   expect(defaultColDef.sortable).toBe(true)
 })
 
+test('sorts Time chronologically, not as strings', () => {
+  expect(column('Time').comparator).toBe(compareTimestamps)
+})
+
 test('right-aligns the numeric columns', () => {
   for (const header of ['Qty', 'Price', 'Notional']) {
     expect(column(header).type).toBe('rightAligned')
@@ -70,5 +76,5 @@ test('formats the timestamp in local time and tolerates a missing value', () => 
 })
 
 test('renders side with the custom renderer', () => {
-  expect(column('Side').cellRenderer).toBe('SideCellRenderer')
+  expect(column('Side').cellRenderer).toBe(SideCellRenderer)
 })

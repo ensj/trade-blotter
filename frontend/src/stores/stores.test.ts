@@ -104,7 +104,7 @@ test('createTrade posts, then re-fetches trades and positions', async () => {
 
 test('createTrade rethrows API errors and does not re-fetch', async () => {
   const fetchMock = stubFetch(
-    jsonResponse({ title: 'Invalid', errors: { Quantity: ['Must be positive.'] } }, 400),
+    jsonResponse({ title: 'Invalid', errors: { quantity: ['Must be positive.'] } }, 400),
   )
   const store = useTradesStore()
   const request = { symbol: 'AAPL', side: 'Buy' as const, quantity: -1, price: 1 }

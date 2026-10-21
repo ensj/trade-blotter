@@ -3,7 +3,8 @@ import type { GetRowIdParams } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
 import type { Position } from '../api/types'
 import { usePositionsStore } from '../stores/positions'
-import { emptyState, gridTheme } from '../theme'
+import { gridTheme } from '../theme'
+import { emptyState } from './emptyState'
 import { positionColumns, positionDefaultColDef } from './positionColumns'
 
 const store = usePositionsStore()

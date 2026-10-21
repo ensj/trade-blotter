@@ -53,17 +53,17 @@ function positions() {
 
 function validate(body: Record<string, unknown>): Record<string, string[]> {
   const errors: Record<string, string[]> = {}
-  const amount = (key: string, value: unknown) => {
+  const amount = (key: string, label: string, value: unknown) => {
     if (typeof value !== 'number' || value <= 0 || value > 1e9) {
-      errors[key] = [`${key} must be greater than 0 and at most 1,000,000,000.`]
+      errors[key] = [`${label} must be greater than 0 and at most 1,000,000,000.`]
     }
   }
   if (typeof body.symbol !== 'string' || !/^[A-Za-z0-9.-]{1,10}$/.test(body.symbol.trim())) {
-    errors.Symbol = ['Symbol must be 1-10 characters of A-Z, 0-9, . or -.']
+    errors.symbol = ['Symbol must be 1-10 characters of A-Z, 0-9, . or -.']
   }
-  if (body.side !== 'Buy' && body.side !== 'Sell') errors.Side = ['Side must be Buy or Sell.']
-  amount('Quantity', body.quantity)
-  amount('Price', body.price)
+  if (body.side !== 'Buy' && body.side !== 'Sell') errors.side = ['Side must be Buy or Sell.']
+  amount('quantity', 'Quantity', body.quantity)
+  amount('price', 'Price', body.price)
   return errors
 }
 

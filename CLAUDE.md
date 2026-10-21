@@ -54,7 +54,7 @@ Parallel agents edit only their own sections of this file and `README.md`:
 <!-- Owned by the frontend agent. -->
 
 - Pure logic lives in `src/lib/` and column defs in `src/components/*Columns.ts`, so they test without mounting a grid. Components stay thin.
-- Grid custom components are registered by name with `defineExpose` (see `BlotterGrid.vue`).
+- Pass grid custom components to `cellRenderer` by reference (see `blotterColumns.ts`); ag-grid-vue3 accepts component objects.
 - AG Grid rows animate out after a filter or data change. Component tests wait about 600 ms before asserting that a row is gone.
 - `npm run dev:mock` runs the UI without the backend (`mock/mockApi.ts`, dev-only). Keep it in step with `docs/openapi.json`.
 - Biome runs with `html.experimentalFullSupportEnabled` so it sees template usage in `.vue` files.

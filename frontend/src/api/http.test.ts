@@ -33,7 +33,7 @@ test('maps a ProblemDetails response to an ApiError', async () => {
   const problem = {
     title: 'One or more validation errors occurred.',
     status: 400,
-    errors: { Symbol: ['Symbol is required.'] },
+    errors: { symbol: ['Symbol is required.'] },
   }
   stubFetch(jsonResponse(problem, 400))
   const error = await request('/trades').catch((e: unknown) => e)

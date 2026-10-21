@@ -33,7 +33,7 @@
     "@stryker-mutator/vitest-runner": "^10.0.0",
     "@types/node": "^24.19.2",
     "@vitejs/plugin-vue": "^6.0.10",
-    "@vitest/coverage-v8": "^5.0.5",
+    "@vitest/coverage-v8": "4.1.12",
     "@vue/test-utils": "^2.5.1",
     "@vue/tsconfig": "^0.9.1",
     "jscpd": "^5.4.1",
@@ -42,7 +42,7 @@
     "lefthook": "^2.2.2",
     "typescript": "~6.0.3",
     "vite": "^8.3.4",
-    "vitest": "^5.0.5",
+    "vitest": "4.1.12",
     "vue-tsc": "^3.3.13"
   }
 }
