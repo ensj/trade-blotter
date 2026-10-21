@@ -1,5 +1,9 @@
 # Trade Blotter
 
+Please note that `prompt.md` was used to generate the project in full. I have manually steered the agents, but mostly in post.
+
+Commit hygiene could have been better. In actuality I should have used squash commits more effectively with branches.
+
 Enter trades, see them in a sortable, searchable blotter, and see positions derived from trade history. .NET 8 Web API + SQLite, Vue 3 + Pinia + PrimeVue + AG Grid Community.
 
 ![Blotter with trades and positions](docs/screenshots/e2e-trades.png)
@@ -20,12 +24,12 @@ Tests: `cd backend && dotnet test`, `cd frontend && npm test`, and `cd frontend 
 
 ## API
 
-| Endpoint | Success | Errors |
-|---|---|---|
-| `POST /trades` `{symbol, side, quantity, price}` | `201` + `Location`, the created trade | `400` ValidationProblemDetails, `415` non-JSON |
-| `GET /trades` | `200`, all trades, newest first | |
-| `GET /trades/{id}` | `200` | `404` |
-| `GET /positions` | `200`, `{symbol, netQuantity, averageCost}` by symbol, zero positions omitted | |
+| Endpoint                                         | Success                                                                       | Errors                                         |
+| ------------------------------------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------- |
+| `POST /trades` `{symbol, side, quantity, price}` | `201` + `Location`, the created trade                                         | `400` ValidationProblemDetails, `415` non-JSON |
+| `GET /trades`                                    | `200`, all trades, newest first                                               |                                                |
+| `GET /trades/{id}`                               | `200`                                                                         | `404`                                          |
+| `GET /positions`                                 | `200`, `{symbol, netQuantity, averageCost}` by symbol, zero positions omitted |                                                |
 
 Unexpected failures return `500` ProblemDetails without exception detail. Contract: `docs/openapi.json`, examples in `docs/examples/`.
 
@@ -73,12 +77,12 @@ Backend behavior worth knowing:
 
 Mutation score (Stryker.NET 4.16.0, `Features/**`, 2026-10-20): **97.92%**, 47 killed, 1 survived, 0 timeouts. 13 mutants did not compile and 4 were skipped as already covered; neither counts.
 
-| File | Killed | Survived |
-|---|---|---|
-| `Positions/PositionCalculator.cs` | 22 | 1 |
-| `Positions/PositionService.cs` | 1 | 0 |
-| `Trades/TradeService.cs` | 5 | 0 |
-| `Trades/TradeValidator.cs` | 19 | 0 |
+| File                              | Killed | Survived |
+| --------------------------------- | ------ | -------- |
+| `Positions/PositionCalculator.cs` | 22     | 1        |
+| `Positions/PositionService.cs`    | 1      | 0        |
+| `Trades/TradeService.cs`          | 5      | 0        |
+| `Trades/TradeValidator.cs`        | 19     | 0        |
 
 Remaining survivor:
 
