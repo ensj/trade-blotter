@@ -1,6 +1,12 @@
-import type { ColDef, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community'
+import type {
+  ColDef,
+  TooltipCallbackParams,
+  ValueFormatterParams,
+  ValueGetterParams,
+} from 'ag-grid-community'
 import { expect, test } from 'vitest'
 import type { Trade } from '../api/types'
+import { formatTimestamp, formatTradeTime } from '../lib/format'
 import { compareTimestamps } from '../lib/timestamp'
 import { blotterColumns, defaultColDef } from './blotterColumns'
 import SideCellRenderer from './SideCellRenderer.vue'
@@ -70,9 +76,14 @@ test('formats numbers with thousands separators', () => {
   expect(format('Notional', null)).toBe('')
 })
 
-test('formats the timestamp in local time and tolerates a missing value', () => {
-  expect(format('Time', trade.timestamp)).toMatch(/2026/)
+test('shows a compact local time and the full date in a tooltip', () => {
+  expect(format('Time', trade.timestamp)).toBe(formatTradeTime(trade.timestamp))
   expect(format('Time', undefined)).toBe('')
+  const tooltip = column('Time').tooltip as (p: TooltipCallbackParams<Trade>) => string
+  expect(tooltip({ value: trade.timestamp } as TooltipCallbackParams<Trade>)).toBe(
+    formatTimestamp(trade.timestamp),
+  )
+  expect(tooltip({ value: undefined } as TooltipCallbackParams<Trade>)).toBe('')
 })
 
 test('renders side with the custom renderer', () => {
