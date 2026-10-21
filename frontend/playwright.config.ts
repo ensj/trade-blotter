@@ -8,10 +8,14 @@ const screenshots = process.env.E2E_SCREENSHOTS === '1'
 // Override to run alongside a dev server on the default ports.
 const apiPort = process.env.E2E_API_PORT ?? '5080'
 const webPort = process.env.E2E_WEB_PORT ?? '5173'
+// Playwright empties outputDir on every run, so a rerun would delete the last failure's trace.
+// Set once here; workers inherit it and resolve the same directory.
+process.env.E2E_RUN_ID ??= new Date().toISOString().replace(/[:.]/g, '-')
 
 export default defineConfig({
   testDir: 'e2e',
   testMatch: screenshots ? 'screenshots.spec.ts' : 'blotter.spec.ts',
+  outputDir: `test-results/${process.env.E2E_RUN_ID}`,
   // The tests share one backend database and build on each other's trades.
   workers: 1,
   fullyParallel: false,
@@ -24,6 +28,7 @@ export default defineConfig({
     locale: 'en-US',
     timezoneId: 'America/New_York',
     trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
   webServer: [
     {
