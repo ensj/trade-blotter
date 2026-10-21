@@ -52,6 +52,18 @@ test('sorts Time chronologically, not as strings', () => {
   expect(column('Time').comparator).toBe(compareTimestamps)
 })
 
+test('sizes text columns to content and lets numeric columns share the rest', () => {
+  expect(blotterColumns.map((c) => [c.headerName, c.width, c.flex])).toEqual([
+    ['Time', 132, undefined],
+    ['Symbol', 100, undefined],
+    ['Side', 72, undefined],
+    ['Qty', undefined, 1],
+    ['Price', undefined, 1],
+    ['Notional', undefined, 1],
+  ])
+  expect(defaultColDef.flex).toBeUndefined()
+})
+
 test('right-aligns the numeric columns', () => {
   for (const header of ['Qty', 'Price', 'Notional']) {
     expect(column(header).type).toBe('rightAligned')

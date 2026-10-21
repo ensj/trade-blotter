@@ -20,26 +20,30 @@ export const blotterColumns: ColDef<Trade>[] = [
     comparator: compareTimestamps,
     valueFormatter: (p) => (p.value ? formatTradeTime(p.value) : ''),
     tooltip: (p) => (p.value ? formatTimestamp(p.value) : ''),
-    minWidth: 170,
+    width: 132,
   },
-  { field: 'symbol', headerName: 'Symbol', cellDataType: 'text', minWidth: 90 },
+  { field: 'symbol', headerName: 'Symbol', cellDataType: 'text', width: 100 },
   {
     field: 'side',
     headerName: 'Side',
     cellDataType: 'text',
     cellRenderer: SideCellRenderer,
-    minWidth: 80,
+    width: 72,
   },
   {
     field: 'quantity',
     headerName: 'Qty',
     type: 'rightAligned',
+    flex: 1,
+    minWidth: 80,
     valueFormatter: (p) => formatQuantity(p.value ?? 0),
   },
   {
     field: 'price',
     headerName: 'Price',
     type: 'rightAligned',
+    flex: 1,
+    minWidth: 90,
     valueFormatter: (p) => formatPrice(p.value ?? 0),
   },
   {
@@ -49,8 +53,10 @@ export const blotterColumns: ColDef<Trade>[] = [
     cellDataType: 'number',
     valueGetter: (p) => (p.data ? notional(p.data.quantity, p.data.price) : null),
     valueFormatter: (p) => (p.value == null ? '' : formatMoney(p.value)),
-    minWidth: 120,
+    flex: 1,
+    minWidth: 110,
   },
 ]
 
-export const defaultColDef: ColDef<Trade> = { sortable: true, flex: 1, minWidth: 90 }
+// Text columns get fixed widths sized to their content; the numeric columns share the rest.
+export const defaultColDef: ColDef<Trade> = { sortable: true }
