@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Time.Testing;
+using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Trades;
 using static TradeBlotter.Api.Tests.Trades.TradeValidatorTests;
 

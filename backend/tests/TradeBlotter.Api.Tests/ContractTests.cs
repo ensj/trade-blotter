@@ -5,6 +5,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Positions;
 using TradeBlotter.Api.Features.Trades;
 

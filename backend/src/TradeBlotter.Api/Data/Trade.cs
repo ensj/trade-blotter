@@ -1,5 +1,3 @@
-using TradeBlotter.Api.Features.Trades;
-
 namespace TradeBlotter.Api.Data;
 
 public sealed class Trade

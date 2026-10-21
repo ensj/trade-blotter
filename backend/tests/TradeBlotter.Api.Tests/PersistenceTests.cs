@@ -2,7 +2,6 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TradeBlotter.Api.Data;
-using TradeBlotter.Api.Features.Trades;
 
 namespace TradeBlotter.Api.Tests;
 

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TradeBlotter.Api.Data;
 
 namespace TradeBlotter.Api.Features.Trades;
 

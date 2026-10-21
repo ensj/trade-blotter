@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
+using TradeBlotter.Api.Data;
 using TradeBlotter.Api.Features.Trades;
 
 namespace TradeBlotter.Api.Tests.Trades;
