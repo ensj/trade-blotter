@@ -2,8 +2,6 @@
 
 Please note that `prompt.md` was used to generate the project in full. I have manually steered the agents, but mostly in post.
 
-Commit hygiene could have been better. In actuality I should have used squash commits more effectively with branches.
-
 Enter trades, see them in a sortable, searchable blotter, and see positions derived from trade history. .NET 8 Web API + SQLite, Vue 3 + Pinia + PrimeVue + AG Grid Community.
 
 ![Blotter with trades and positions](docs/screenshots/e2e-trades.png)
